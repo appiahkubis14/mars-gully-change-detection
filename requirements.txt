@@ -1,0 +1,79 @@
+# Mars Gully Digital Twin - Dependencies
+# Python 3.10+ required
+# Install: pip install -r requirements.txt
+
+# Core scientific stack
+numpy==1.26.4
+scipy==1.13.0
+pandas==2.2.2
+matplotlib==3.8.4
+seaborn==0.13.2
+
+# Geospatial
+rasterio==1.3.10
+geopandas==0.14.4
+pyproj==3.6.1
+shapely==2.0.4
+fiona==1.9.6
+pyogrio==0.7.2
+affine==2.4.0
+
+# Remote sensing / image processing
+opencv-python==4.9.0.80
+scikit-image==0.23.2
+Pillow==10.3.0
+
+# Deep learning
+torch==2.3.0
+torchvision==0.18.0
+segmentation-models-pytorch==0.3.3
+albumentations==1.4.5
+
+# Training utilities
+tensorboard==2.17.0
+tqdm==4.66.4
+pyyaml==6.0.1
+
+# STAC / Cloud-Optimized GeoTIFF
+pystac==1.10.1
+rio-cogeo==5.3.1
+stackstac==0.5.1
+
+# Dashboard / Visualization
+folium==0.16.0
+plotly==5.22.0
+branca==0.7.2
+ipywidgets==8.1.3
+
+# Data download
+requests==2.32.2
+urllib3==2.2.1
+tqdm==4.66.4
+boto3==1.34.110
+
+# Kalman filtering
+filterpy==1.4.5
+
+# Texture features
+scikit-learn==1.5.0
+
+# Notebook support
+jupyter==1.0.0
+ipykernel==6.29.4
+notebook==7.2.0
+
+# Testing
+pytest==8.2.0
+pytest-cov==5.0.0
+responses==0.25.3
+
+# Code quality
+black==24.4.2
+isort==5.13.2
+flake8==7.0.0
+
+# Utilities
+click==8.1.7
+rich==13.7.1
+python-dotenv==1.0.1
+psutil==5.9.8
