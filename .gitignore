@@ -40,6 +40,9 @@ data/outputs/logs/
 .idea/
 *.swp
 *.swo
+*.tiff
+*.tif
+*.JP2
 
 # OS
 .DS_Store

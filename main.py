@@ -78,13 +78,29 @@ Available pipeline steps:
 
 
 def run_download(cfg: str, site: str = None, **kwargs) -> None:
-    from scripts.downloaders.download_hirise import download_hirise
-    from scripts.downloaders.download_ctx import download_ctx
-    from scripts.downloaders.download_mola import download_mola
+    from scripts.downloaders.download_hirise import download_hirise_all
+    from scripts.downloaders.download_ctx import download_ctx_all
+    from scripts.downloaders.download_mola import download_mola_all
+    from scripts.utils import StepCheckpoint
+    from pathlib import Path
+    
     log.info("=== STEP: download ===")
-    download_hirise(cfg)
-    download_ctx(cfg)
-    download_mola(cfg)
+    
+    # Load config to get proper paths
+    import yaml
+    with open(cfg) as f:
+        config = yaml.safe_load(f)
+    
+    # Set up checkpoint and output directories
+    checkpoint = StepCheckpoint(config.get("paths", {}).get("models", "data/models"))
+    hirise_dir = Path(config.get("paths", {}).get("raw_data", "data/raw")) / "hirise"
+    ctx_dir = Path(config.get("paths", {}).get("raw_data", "data/raw")) / "ctx"
+    mola_dir = Path(config.get("paths", {}).get("raw_data", "data/raw")) / "mola"
+    
+    # Call with all required arguments
+    download_hirise_all(config, hirise_dir, checkpoint, force=False)
+    download_ctx_all(config,ctx_dir,checkpoint,force=False)
+    download_mola_all(config,mola_dir,checkpoint,force=False)
 
 
 def run_preprocess(cfg: str, **kwargs) -> None:

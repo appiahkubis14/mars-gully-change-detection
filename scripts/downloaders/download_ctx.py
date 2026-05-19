@@ -76,17 +76,36 @@ def ctx_obs_to_url(obs_id: str) -> Optional[str]:
     except Exception as e:
         log.debug(f"ODE lookup failed for {obs_id}: {e}")
 
-    # Fallback: construct URL from obs_id pattern
-    # CTX volumes are named mrox_NNNN; orbit encoded in obs_id
-    match = re.match(r"[A-Z]\d+_(\d+)_(\d+)_([A-Z]+)_(\d+[NS]\d+[EW])", obs_id)
-    if match:
-        orbit = int(match.group(1))
-        vol = (orbit // 100) * 100
-        vol_id = f"mrox_{vol // 100:04d}"
-        url = f"{PDS_BASE}{vol_id}/data/{obs_id}.IMG"
-        log.debug(f"Constructed CTX URL (fallback): {url}")
-        return url
+    # Fallback: try ODE product search endpoint (alternate URL format)
+    try:
+        alt_url = "https://ode.rsl.wustl.edu/mars/product/product_files"
+        params2 = {
+            "ihid": "MRO", "iid": "CTX", "pt": "EDR",
+            "product_id": obs_id + "*",   # wildcard match
+            "output": "JSON", "pretty": "false"
+        }
+        resp2 = requests.get(alt_url, params=params2, timeout=30)
+        resp2.raise_for_status()
+        data2 = resp2.json()
+        products2 = data2.get("ODEResults", {}).get("Products", {}).get("Product", [])
+        if isinstance(products2, dict):
+            products2 = [products2]
+        for product in products2:
+            files = product.get("Product_files", {}).get("Product_file", [])
+            if isinstance(files, dict):
+                files = [files]
+            for pf in files:
+                url = pf.get("URL", "")
+                if url.endswith(".IMG") or url.endswith(".img"):
+                    log.debug(f"ODE alt found URL: {url}")
+                    return url
+    except Exception as e:
+        log.debug(f"ODE alt lookup failed: {e}")
 
+    log.warning(
+        f"Could not resolve CTX URL for {obs_id}. "
+        "Use scripts/downloaders/manual_data_guide.py for manual download instructions."
+    )
     return None
 
 
@@ -103,10 +122,10 @@ def img_to_geotiff(img_path: Path, out_path: Path) -> bool:
         if result.returncode != 0:
             log.error(f"gdal_translate failed: {result.stderr}")
             return False
-        log.debug(f"Converted {img_path.name} → {out_path.name}")
+        log.debug(f"Converted {img_path.name} -> {out_path.name}")
         return True
     except FileNotFoundError:
-        log.error("gdal_translate not found — install GDAL")
+        log.error("gdal_translate not found  -  install GDAL")
         return False
     except subprocess.TimeoutExpired:
         log.error(f"gdal_translate timeout for {img_path}")
@@ -174,36 +193,45 @@ def download_ctx_observation(
         result_path = img_path
 
     checkpoint.mark_done("ctx_download", ck_key, {"path": str(result_path)})
-    log.info(f"✓ CTX {obs_id} ready: {result_path}")
+    log.info(f"[OK] CTX {obs_id} ready: {result_path}")
     return result_path
 
 
 def _download_file(
-    url: str, dest: Path, session: requests.Session, retries: int = 3
+    url: str, dest: Path, session: requests.Session = None, retries: int = 8
 ) -> bool:
-    existing = dest.stat().st_size if dest.exists() else 0
+    """Robust download with byte-range resume for CTX .IMG files."""
+    import random
     for attempt in range(1, retries + 1):
+        existing = dest.stat().st_size if dest.exists() else 0
         try:
-            headers = {"Range": f"bytes={existing}-"} if existing else {}
-            resp = session.get(url, headers=headers, stream=True, timeout=60)
+            s = requests.Session()
+            s.headers.update({"Accept-Encoding": "identity", "Connection": "keep-alive"})
+            headers = {"Range": f"bytes={existing}-"}
+            resp = s.get(url, headers=headers, stream=True, timeout=(30, 300))
             if resp.status_code == 416:
                 return True
-            resp.raise_for_status()
-            total = int(resp.headers.get("Content-Length", 0))
+            if resp.status_code not in (200, 206):
+                raise requests.HTTPError(response=resp)
+            total = int(resp.headers.get("Content-Length", 0)) + existing
             mode = "ab" if existing else "wb"
             with open(dest, mode) as f, tqdm(
                 total=total, initial=existing, unit="B",
-                unit_scale=True, desc=dest.name, leave=False
+                unit_scale=True, desc=dest.name[:45], leave=True
             ) as pbar:
-                for chunk in resp.iter_content(CHUNK_SIZE):
+                for chunk in resp.iter_content(256 * 1024):
                     if chunk:
                         f.write(chunk)
+                        f.flush()
                         pbar.update(len(chunk))
             return True
         except Exception as e:
-            log.warning(f"Attempt {attempt} failed: {e}")
+            mb = dest.stat().st_size / 1e6 if dest.exists() else 0
+            log.warning(f"Attempt {attempt}/{retries} failed at {mb:.1f} MB: {type(e).__name__}: {e}")
             if attempt < retries:
-                time.sleep(5 * attempt)
+                wait = 15 * attempt + random.uniform(0, 10)
+                log.info(f"Resuming in {wait:.0f}s...")
+                time.sleep(wait)
     return False
 
 
@@ -215,7 +243,7 @@ def download_ctx_all(
 ) -> Dict[str, Dict[str, Optional[Path]]]:
     """Download all configured CTX observations."""
     if not cfg["data_sources"]["ctx"]["enabled"]:
-        log.info("CTX disabled in config — skipping")
+        log.info("CTX disabled in config  -  skipping")
         return {}
 
     session = requests.Session()

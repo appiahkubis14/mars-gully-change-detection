@@ -76,15 +76,22 @@ def download_mola_global(
 
     log.info(f"Downloading MOLA global DEM ({resolution}): {img_url}")
 
+    # Check if the USGS GeoTIFF was already downloaded successfully
+    usgs_tif = output_dir / "mola_global_463m.tif"
+    if usgs_tif.exists() and usgs_tif.stat().st_size > 100_000_000:
+        log.info(f"[OK] MOLA GeoTIFF already present: {usgs_tif}")
+        checkpoint.mark_done("mola_download", ck_key, {"path": str(usgs_tif)})
+        return usgs_tif
+
     img_path = output_dir / filename
     if not img_path.exists():
         ok = _download_with_progress(img_url, img_path)
         if not ok:
             log.error("MOLA DEM download failed")
-            # Try alternate source (USGS)
-            usgs_url = f"https://planetarymaps.usgs.gov/mosaic/Mars_MGS_MOLA_DEM_mosaic_global_463m.tif"
+            # Try alternate source (USGS GeoTIFF — preferred for Windows)
+            usgs_url = "https://planetarymaps.usgs.gov/mosaic/Mars_MGS_MOLA_DEM_mosaic_global_463m.tif"
             log.info(f"Trying USGS alternate: {usgs_url}")
-            img_path = output_dir / "mola_global_463m.tif"
+            img_path = usgs_tif
             ok = _download_with_progress(usgs_url, img_path)
             if not ok:
                 checkpoint.mark_failed("mola_download", ck_key, "All sources failed")
@@ -96,40 +103,55 @@ def download_mola_global(
         _download_with_progress(lbl_url, lbl_path)
 
     checkpoint.mark_done("mola_download", ck_key, {"path": str(img_path)})
-    log.info(f"✓ MOLA DEM ready: {img_path}")
+    log.info(f"[OK] MOLA DEM ready: {img_path}")
     return img_path
 
 
-def _download_with_progress(url: str, dest: Path, retries: int = 3) -> bool:
-    """Download file with progress bar and resume support."""
-    import time
-    existing = dest.stat().st_size if dest.exists() else 0
+def _download_with_progress(url: str, dest: Path, retries: int = 10) -> bool:
+    """
+    Robust download with byte-range resume.
+    Handles ConnectionResetError (WinError 10054) from NASA/USGS servers
+    on large files (MOLA GeoTIFF is 2.13 GB).
+    """
+    import time, random
 
     for attempt in range(1, retries + 1):
+        existing = dest.stat().st_size if dest.exists() else 0
         try:
             session = requests.Session()
-            headers = {"Range": f"bytes={existing}-"} if existing else {}
-            resp = session.get(url, headers=headers, stream=True, timeout=120)
+            session.headers.update({
+                "Accept-Encoding": "identity",  # required for Range resume
+                "Connection": "keep-alive",
+            })
+            headers = {"Range": f"bytes={existing}-"}
+            resp = session.get(url, headers=headers, stream=True, timeout=(30, 300))
             if resp.status_code == 416:
                 log.debug("File already complete (416)")
                 return True
+            if resp.status_code not in (200, 206):
+                log.warning(f"HTTP {resp.status_code} on attempt {attempt}")
+                raise requests.HTTPError(response=resp)
             resp.raise_for_status()
-            total = int(resp.headers.get("Content-Length", 0))
+            total = int(resp.headers.get("Content-Length", 0)) + existing
             mode = "ab" if existing else "wb"
             with open(dest, mode) as f, tqdm(
                 total=total, initial=existing,
                 unit="B", unit_scale=True,
                 desc=dest.name[:50], leave=True
             ) as pbar:
-                for chunk in resp.iter_content(1024 * 1024):
+                for chunk in resp.iter_content(256 * 1024):  # 256 KB chunks
                     if chunk:
                         f.write(chunk)
+                        f.flush()
                         pbar.update(len(chunk))
             return True
         except Exception as e:
-            log.warning(f"Download attempt {attempt} failed: {e}")
+            mb = dest.stat().st_size / 1e6 if dest.exists() else 0
+            log.warning(f"Download attempt {attempt}/{retries} failed at {mb:.1f} MB: {type(e).__name__}: {e}")
             if attempt < retries:
-                time.sleep(10 * attempt)
+                wait = 15 * attempt + random.uniform(0, 10)
+                log.info(f"Resuming in {wait:.0f}s (file preserved at {mb:.1f} MB)...")
+                time.sleep(wait)
     return False
 
 
@@ -156,7 +178,7 @@ def mola_img_to_geotiff(img_path: Path, output_dir: Path) -> Optional[Path]:
             capture_output=True, text=True, timeout=300
         )
         if result.returncode == 0:
-            log.info(f"✓ MOLA GeoTIFF: {tif_path}")
+            log.info(f"[OK] MOLA GeoTIFF: {tif_path}")
             return tif_path
         else:
             log.warning(f"gdal_translate failed: {result.stderr[:200]}")
@@ -210,7 +232,7 @@ def _mola_raw_to_geotiff(img_path: Path, tif_path: Path) -> Optional[Path]:
                 nodata=str(np.nan)
             )
 
-        log.info(f"✓ MOLA GeoTIFF (manual): {tif_path}")
+        log.info(f"[OK] MOLA GeoTIFF (manual): {tif_path}")
         return tif_path
 
     except Exception as e:
@@ -226,9 +248,10 @@ def subset_mola(
     """
     Extract a bounding-box subset from the global MOLA DEM.
 
-    Parameters
-    ----------
     bounds : [min_lon, min_lat, max_lon, max_lat]
+
+    Tries gdal_translate first; falls back to pure rasterio windowed read
+    so it works on Windows without a GDAL binary on PATH.
     """
     if output_path.exists():
         log.debug(f"MOLA subset exists: {output_path}")
@@ -237,22 +260,72 @@ def subset_mola(
     output_path.parent.mkdir(parents=True, exist_ok=True)
     lon_min, lat_min, lon_max, lat_max = bounds
 
+    # --- Try gdal_translate first ---
+    import shutil
+    gdal_bin = shutil.which("gdal_translate")
+    if gdal_bin:
+        try:
+            result = subprocess.run(
+                [gdal_bin,
+                 "-projwin", str(lon_min), str(lat_max), str(lon_max), str(lat_min),
+                 "-of", "GTiff", "-co", "COMPRESS=DEFLATE",
+                 str(global_tif), str(output_path)],
+                capture_output=True, text=True, timeout=120
+            )
+            if result.returncode == 0:
+                log.info(f"[OK] MOLA subset (gdal): {output_path}")
+                return output_path
+            log.warning(f"gdal_translate failed: {result.stderr[:200]}")
+        except Exception as e:
+            log.warning(f"gdal_translate error: {e}")
+
+    # --- Fallback: rasterio windowed read (no GDAL binary required) ---
+    log.info("Using rasterio for MOLA subset (gdal_translate not found)")
+    return _subset_mola_rasterio(global_tif, bounds, output_path)
+
+
+def _subset_mola_rasterio(
+    global_tif: Path,
+    bounds: List[float],
+    output_path: Path
+) -> Optional[Path]:
+    """Pure-rasterio MOLA subset. Works on Windows without GDAL binary."""
     try:
-        result = subprocess.run(
-            ["gdal_translate",
-             "-projwin", str(lon_min), str(lat_max), str(lon_max), str(lat_min),
-             "-of", "GTiff",
-             "-co", "COMPRESS=DEFLATE",
-             str(global_tif), str(output_path)],
-            capture_output=True, text=True, timeout=120
-        )
-        if result.returncode == 0:
-            log.info(f"✓ MOLA subset: {output_path}")
-            return output_path
-        log.error(f"gdal_translate subset failed: {result.stderr[:200]}")
-        return None
+        import rasterio
+        from rasterio.windows import from_bounds as window_from_bounds
+
+        lon_min, lat_min, lon_max, lat_max = bounds
+
+        with rasterio.open(global_tif) as src:
+            window = window_from_bounds(lon_min, lat_min, lon_max, lat_max,
+                                        transform=src.transform)
+            col_off = max(0, int(window.col_off))
+            row_off = max(0, int(window.row_off))
+            width   = min(int(window.width),  src.width  - col_off)
+            height  = min(int(window.height), src.height - row_off)
+
+            if width <= 0 or height <= 0:
+                log.error(f"Empty MOLA subset window for bounds {bounds}")
+                return None
+
+            win  = rasterio.windows.Window(col_off, row_off, width, height)
+            data = src.read(1, window=win)
+            profile = src.profile.copy()
+            profile.update(
+                width=width, height=height,
+                transform=src.window_transform(win),
+                compress="deflate", tiled=True,
+                blockxsize=256, blockysize=256,
+            )
+
+        with rasterio.open(output_path, "w", **profile) as dst:
+            dst.write(data, 1)
+
+        log.info(f"[OK] MOLA subset (rasterio): {output_path} [{width}x{height}px]")
+        return output_path
+
     except Exception as e:
-        log.error(f"MOLA subset error: {e}")
+        log.error(f"MOLA rasterio subset failed: {e}")
         return None
 
 
@@ -264,7 +337,7 @@ def download_mola_all(
 ) -> Dict[str, Optional[Path]]:
     """Download MOLA global DEM and extract subsets for all study sites."""
     if not cfg["data_sources"]["mola"]["enabled"]:
-        log.info("MOLA disabled — skipping")
+        log.info("MOLA disabled  -  skipping")
         return {}
 
     output_dir = Path(output_dir)

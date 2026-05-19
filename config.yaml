@@ -33,20 +33,31 @@ data_sources:
     target_dates: ["2009", "2010", "2012", "2015", "2018"]
     file_extension: ".JP2"
     known_images:
+      # Verified Gasa Crater (35.7S 129.4E) - gully activity confirmed in literature
+      # Dundas et al. 2010 GRL; Harrison et al. 2019 GSL Special Publications
       gasa:
-        - "ESP_012821_1440"
-        - "ESP_016625_1440"
-        - "ESP_023957_1440"
-        - "ESP_034579_1440"
-        - "ESP_055527_1440"
+        - "PSP_004060_1440"
+        - "ESP_012024_1440"
+        - "ESP_020661_1440"
+        - "ESP_027597_1440"
+        - "ESP_039448_1440"
+        - "ESP_058075_1440"
+      # Verified Palikir Crater (41.6S 202.3E) - RSL + gullies
+      # Note: latitude band 41.6S maps to _1380 suffix, not _1445
       palikir:
-        - "ESP_011428_1445"
-        - "ESP_022351_1445"
-        - "ESP_034303_1445"
+        - "PSP_005943_1380"
+        - "ESP_021555_1380"
+        - "ESP_031102_1380"
+        - "ESP_039502_1380"
+      # Verified Russell Crater (54.3S 12.9E) - dune gullies
+      # Pilorget & Forget 2016 Nature Geoscience; Diniega et al. 2010
       russell:
-        - "ESP_016042_1255"
-        - "ESP_034313_1255"
-        - "ESP_047959_1255"
+        - "PSP_001440_1255"
+        - "ESP_018872_1255"
+        - "ESP_030898_1255"
+        - "ESP_034234_1255"
+        - "ESP_046867_1255"
+        - "ESP_047078_1255"
   ctx:
     enabled: true
     resolution_m: 6.0

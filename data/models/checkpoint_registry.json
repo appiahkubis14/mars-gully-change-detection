@@ -1,0 +1,79 @@
+{
+  "hirise_download:ESP_012821_1440": {
+    "status": "failed",
+    "timestamp": "2026-05-19T15:10:24.222512",
+    "error": "No files found on PDS"
+  },
+  "hirise_download:ESP_016625_1440": {
+    "status": "failed",
+    "timestamp": "2026-05-19T15:10:31.636742",
+    "error": "No files found on PDS"
+  },
+  "hirise_download:ESP_023957_1440": {
+    "status": "failed",
+    "timestamp": "2026-05-19T15:08:04.587122",
+    "error": "No files listed"
+  },
+  "hirise_download:ESP_034579_1440": {
+    "status": "failed",
+    "timestamp": "2026-05-19T15:08:05.589278",
+    "error": "No files listed"
+  },
+  "hirise_download:ESP_055527_1440": {
+    "status": "failed",
+    "timestamp": "2026-05-19T15:08:06.587946",
+    "error": "No files listed"
+  },
+  "hirise_download:ESP_011428_1445": {
+    "status": "failed",
+    "timestamp": "2026-05-19T15:08:07.590276",
+    "error": "No files listed"
+  },
+  "hirise_download:ESP_022351_1445": {
+    "status": "failed",
+    "timestamp": "2026-05-19T09:02:10.937941",
+    "error": "No files listed"
+  },
+  "hirise_download:ESP_034303_1445": {
+    "status": "failed",
+    "timestamp": "2026-05-19T09:02:11.935591",
+    "error": "No files listed"
+  },
+  "hirise_download:ESP_016042_1255": {
+    "status": "failed",
+    "timestamp": "2026-05-19T09:02:12.937538",
+    "error": "No files listed"
+  },
+  "hirise_download:ESP_034313_1255": {
+    "status": "failed",
+    "timestamp": "2026-05-19T09:02:13.940760",
+    "error": "No files listed"
+  },
+  "hirise_download:ESP_047959_1255": {
+    "status": "failed",
+    "timestamp": "2026-05-19T09:02:14.937357",
+    "error": "No files listed"
+  },
+  "ctx_download:B02_010415_1440_XI_36S230W": {
+    "status": "failed",
+    "timestamp": "2026-05-19T09:02:36.839814",
+    "error": "Download failed"
+  },
+  "ctx_download:G01_018727_1440_XN_36S230W": {
+    "status": "failed",
+    "timestamp": "2026-05-19T09:02:56.554525",
+    "error": "Download failed"
+  },
+  "ctx_download:J02_045879_1440_XN_36S230W": {
+    "status": "failed",
+    "timestamp": "2026-05-19T09:03:17.453757",
+    "error": "Download failed"
+  },
+  "mola_download:mola_global_4ppd": {
+    "status": "done",
+    "timestamp": "2026-05-19T10:30:37.941519",
+    "metadata": {
+      "path": "data\\raw\\mola\\mola_global_463m.tif"
+    }
+  }
+}
