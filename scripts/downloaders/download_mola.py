@@ -1,3 +1,4 @@
+import os
 """
 MOLA (Mars Orbiter Laser Altimeter) DEM Downloader
 Downloads the global MOLA MEGDR (Mission Experiment Gridded Data Record)
@@ -289,43 +290,156 @@ def _subset_mola_rasterio(
     bounds: List[float],
     output_path: Path
 ) -> Optional[Path]:
-    """Pure-rasterio MOLA subset. Works on Windows without GDAL binary."""
-    try:
-        import rasterio
-        from rasterio.windows import from_bounds as window_from_bounds
+    """
+    PROJ-INDEPENDENT MOLA subset using pure affine pixel arithmetic.
 
+    The USGS MOLA GeoTIFF (mola_global_463m.tif) is in a Simple Cylindrical
+    projection with units of METRES (not degrees). The affine transform is:
+        T.c = 0.0         (x origin, metres)
+        T.f = 5335046.0   (y origin = lat 90N in metres)
+        T.a = 463.094     (metres per pixel, longitude direction)
+        T.e = -463.094    (metres per pixel, latitude direction, negative)
+
+    Bounds from config.yaml are in DEGREES (lon/lat). We convert to metres
+    using the Mars mean radius (3,396,190 m) before computing pixel indices.
+
+    No PROJ, no pyproj, no window_from_bounds -- pure arithmetic only.
+    """
+    import math
+    import rasterio
+    import rasterio.windows
+    import numpy as np
+
+    MARS_R = 3_396_190.0  # Mars mean radius, metres
+
+    def lon_to_m(lon_deg: float) -> float:
+        return lon_deg * math.pi / 180.0 * MARS_R
+
+    def lat_to_m(lat_deg: float) -> float:
+        return lat_deg * math.pi / 180.0 * MARS_R
+
+    try:
         lon_min, lat_min, lon_max, lat_max = bounds
 
+        # Convert degree bounds to metres
+        x_min = lon_to_m(lon_min)
+        x_max = lon_to_m(lon_max)
+        y_min = lat_to_m(lat_min)   # more negative (further south)
+        y_max = lat_to_m(lat_max)   # less negative (further north)
+
         with rasterio.open(global_tif) as src:
-            window = window_from_bounds(lon_min, lat_min, lon_max, lat_max,
-                                        transform=src.transform)
-            col_off = max(0, int(window.col_off))
-            row_off = max(0, int(window.row_off))
-            width   = min(int(window.width),  src.width  - col_off)
-            height  = min(int(window.height), src.height - row_off)
+            T = src.transform
+            W = src.width
+            H = src.height
 
-            if width <= 0 or height <= 0:
-                log.error(f"Empty MOLA subset window for bounds {bounds}")
-                return None
+            # Affine coefficients (in metres)
+            origin_x = T.c   # x-coordinate of left edge of col=0
+            origin_y = T.f   # y-coordinate of top edge of row=0
+            px_x = T.a       # metres per pixel in x (positive)
+            px_y = T.e       # metres per pixel in y (negative)
 
-            win  = rasterio.windows.Window(col_off, row_off, width, height)
-            data = src.read(1, window=win)
-            profile = src.profile.copy()
-            profile.update(
-                width=width, height=height,
-                transform=src.window_transform(win),
-                compress="deflate", tiled=True,
-                blockxsize=256, blockysize=256,
+            log.debug(
+                f"MOLA transform: origin=({origin_x:.1f},{origin_y:.1f}) m "
+                f"px=({px_x:.3f},{px_y:.3f}) m/px  size={W}x{H}"
+            )
+            log.debug(
+                f"Bounds in metres: x=[{x_min:.0f},{x_max:.0f}] "
+                f"y=[{y_min:.0f},{y_max:.0f}]"
             )
 
+            # Pixel column: col = (x - origin_x) / px_x
+            col_min = int((x_min - origin_x) / px_x)
+            col_max = int((x_max - origin_x) / px_x) + 1
+
+            # Pixel row: row = (origin_y - y) / |px_y|
+            # (y decreases as row index increases)
+            row_min = int((origin_y - y_max) / abs(px_y))
+            row_max = int((origin_y - y_min) / abs(px_y)) + 1
+
+            # Clamp to raster bounds
+            col_min = max(0, min(col_min, W - 1))
+            col_max = max(col_min + 1, min(col_max, W))
+            row_min = max(0, min(row_min, H - 1))
+            row_max = max(row_min + 1, min(row_max, H))
+
+            width  = col_max - col_min
+            height = row_max - row_min
+
+            log.debug(
+                f"Pixel window: cols={col_min}-{col_max} "
+                f"rows={row_min}-{row_max} size={width}x{height}"
+            )
+
+            if width <= 0 or height <= 0:
+                log.error(
+                    f"Empty window after clamping. Bounds (deg) {bounds} -> "
+                    f"metres x=[{x_min:.0f},{x_max:.0f}] y=[{y_min:.0f},{y_max:.0f}]. "
+                    f"Raster x=[{origin_x:.0f},{origin_x+W*px_x:.0f}] "
+                    f"y=[{origin_y+H*px_y:.0f},{origin_y:.0f}]"
+                )
+                return None
+
+            win  = rasterio.windows.Window(col_min, row_min, width, height)
+            data = src.read(1, window=win)
+
+            # New affine transform for the subset window
+            new_origin_x = origin_x + col_min * px_x
+            new_origin_y = origin_y + row_min * px_y  # px_y is negative
+
+            from affine import Affine
+            new_transform = Affine(px_x, 0.0, new_origin_x,
+                                   0.0, px_y, new_origin_y)
+
+            profile = src.profile.copy()
+
+            # Block size must be multiple of 16 for tiled GeoTIFF
+            def _blk(n):
+                b = min(256, n)
+                return max(16, (b // 16) * 16)
+
+            use_tiling = (width >= 16 and height >= 16)
+            profile.update(
+                width=width, height=height,
+                transform=new_transform,
+                compress="deflate",
+                count=1, driver="GTiff",
+            )
+            if use_tiling:
+                profile.update(tiled=True,
+                               blockxsize=_blk(width),
+                               blockysize=_blk(height))
+            else:
+                for k in ("tiled", "blockxsize", "blockysize"):
+                    profile.pop(k, None)
+
+            # Drop CRS to avoid PROJ validation error during write
+            crs_backup = profile.pop("crs", None)
+
+        output_path.parent.mkdir(parents=True, exist_ok=True)
         with rasterio.open(output_path, "w", **profile) as dst:
             dst.write(data, 1)
+            if crs_backup is not None:
+                try:
+                    dst.crs = crs_backup
+                except Exception:
+                    pass
 
-        log.info(f"[OK] MOLA subset (rasterio): {output_path} [{width}x{height}px]")
+        # Convert window back to degrees for the log message
+        lon_out_min = (new_origin_x) / MARS_R * 180.0 / math.pi
+        lon_out_max = (new_origin_x + width * px_x) / MARS_R * 180.0 / math.pi
+        lat_out_max = (new_origin_y) / MARS_R * 180.0 / math.pi
+        lat_out_min = (new_origin_y + height * px_y) / MARS_R * 180.0 / math.pi
+
+        log.info(
+            f"[OK] MOLA subset: {output_path.name} "
+            f"[{width}x{height}px | "
+            f"{lon_out_min:.2f}-{lon_out_max:.2f}E | "
+            f"{lat_out_min:.2f}-{lat_out_max:.2f}]"
+        )
         return output_path
 
     except Exception as e:
-        log.error(f"MOLA rasterio subset failed: {e}")
+        log.error(f"MOLA rasterio subset failed: {e}", exc_info=True)
         return None
 
 

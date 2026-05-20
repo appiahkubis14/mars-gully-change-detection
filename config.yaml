@@ -1,172 +1,220 @@
 project:
-  name: "Mars Gully Digital Twin"
-  version: "1.0.0"
-  created: "2026-05-15"
-  author: "Samuel Appiah Kubi"
-  institution: "Copernicus Master's in Digital Earth"
-  contact: "samuel.appiah-kubi@student.utwente.nl"
-  orcid: "0000-0000-0000-0000"
-
+  name: Mars Gully Digital Twin
+  version: 1.0.0
+  created: '2026-05-15'
+  author: Samuel Appiah Kubi
+  institution: Copernicus Master's in Digital Earth
+  contact: samuel.appiah-kubi@student.utwente.nl
+  orcid: 0000-0000-0000-0000
 study_area:
   primary:
-    name: "Gasa Crater"
+    name: Gasa Crater
     center_lon: 129.5
     center_lat: -35.7
-    bounds: [128.5, -36.5, 130.5, -34.9]
+    bounds:
+    - 128.5
+    - -36.5
+    - 130.5
+    - -34.9
   secondary:
-    name: "Palikir Crater"
-    center_lon: 125.4
-    center_lat: -34.7
-    bounds: [124.4, -35.5, 126.4, -33.9]
+    name: Palikir Crater
+    center_lon: 157.7
+    center_lat: -41.6
+    bounds:
+    - 156.7
+    - -42.5
+    - 158.7
+    - -40.7
   tertiary:
-    name: "Russell Crater"
-    center_lon: 12.9
-    center_lat: -54.5
-    bounds: [11.9, -55.3, 13.9, -53.7]
-
+    name: Russell Crater
+    center_lon: 347.3
+    center_lat: -54.3
+    bounds:
+    - 346.3
+    - -55.1
+    - 348.3
+    - -53.5
 data_sources:
   hirise:
     enabled: true
     resolution_m: 0.5
-    bands: [1, 2, 3]
-    pds_url: "https://hirise-pds.lpl.arizona.edu/PDS/EDR/"
-    target_dates: ["2009", "2010", "2012", "2015", "2018"]
-    file_extension: ".JP2"
+    bands:
+    - 1
+    - 2
+    - 3
+    pds_url: https://hirise-pds.lpl.arizona.edu/PDS/EDR/
+    target_dates:
+    - '2009'
+    - '2010'
+    - '2012'
+    - '2015'
+    - '2018'
+    file_extension: .JP2
     known_images:
-      # Verified Gasa Crater (35.7S 129.4E) - gully activity confirmed in literature
-      # Dundas et al. 2010 GRL; Harrison et al. 2019 GSL Special Publications
       gasa:
-        - "PSP_004060_1440"
-        - "ESP_012024_1440"
-        - "ESP_020661_1440"
-        - "ESP_027597_1440"
-        - "ESP_039448_1440"
-        - "ESP_058075_1440"
-      # Verified Palikir Crater (41.6S 202.3E) - RSL + gullies
-      # Note: latitude band 41.6S maps to _1380 suffix, not _1445
+      - ESP_012024_1440
+      - ESP_020661_1440
+      - ESP_027597_1440
+      - ESP_039448_1440
+      - ESP_058075_1440
       palikir:
-        - "PSP_005943_1380"
-        - "ESP_021555_1380"
-        - "ESP_031102_1380"
-        - "ESP_039502_1380"
-      # Verified Russell Crater (54.3S 12.9E) - dune gullies
-      # Pilorget & Forget 2016 Nature Geoscience; Diniega et al. 2010
+      - ESP_021555_1380
+      - ESP_031102_1380
+      - ESP_039502_1380
       russell:
-        - "PSP_001440_1255"
-        - "ESP_018872_1255"
-        - "ESP_030898_1255"
-        - "ESP_034234_1255"
-        - "ESP_046867_1255"
-        - "ESP_047078_1255"
+      - ESP_018872_1255
+      - ESP_030898_1255
+      - ESP_034234_1255
+      - ESP_046867_1255
+      - ESP_047078_1255
   ctx:
     enabled: true
     resolution_m: 6.0
-    pds_url: "https://pds-imaging.jpl.nasa.gov/data/mro/ctx/"
-    file_extension: ".IMG"
+    pds_url: https://pds-imaging.jpl.nasa.gov/data/mro/ctx/
+    file_extension: .IMG
     known_images:
       gasa:
-        - "B02_010415_1440_XI_36S230W"
-        - "G01_018727_1440_XN_36S230W"
-        - "J02_045879_1440_XN_36S230W"
+      - B01_009901_1440_XN_36S230W
+      - B08_012736_1444_XN_35S230W
+      - B11_014081_1440_XN_36S230W
+      - B16_016059_1442_XN_35S230W
+      - B18_016626_1441_XN_35S230W
+      - B19_017048_1440_XN_36S230W
+      palikir:
+      - G17_024985_1374_XN_42S202W
+      - G18_025407_1376_XN_42S202W
+      - J07_047455_1373_XN_42S202W
+      - J10_048668_1374_XN_42S203W
+      - U21_079316_1372_XN_42S202W
+      russell:
+      - B01_009879_1252_XN_54S347W
+      - B02_010301_1254_XI_54S347W
+      - B02_010446_1253_XN_54S347W
+      - B03_010657_1253_XI_54S347W
+      - B05_011435_1253_XI_54S347W
+      - B05_011580_1253_XN_54S347W
   crism:
     enabled: true
     resolution_m: 18.0
-    pds_url: "https://pds-geosciences.wustl.edu/mro/mro-m-crism-3-rdr-targeted-v1/mrocr_1xxx/data/"
-    file_extension: ".IMG"
-    type: "TRDR"
+    pds_url: https://pds-geosciences.wustl.edu/mro/mro-m-crism-3-rdr-targeted-v1/mrocr_1xxx/data/
+    file_extension: .IMG
+    type: TRDR
   hrsc:
     enabled: false
     resolution_m: 12.5
-    esa_url: "https://psa.esa.int/psa/api/v1.0/"
-    file_extension: ".IMG"
+    esa_url: https://psa.esa.int/psa/api/v1.0/
+    file_extension: .IMG
   mola:
     enabled: true
     resolution_m: 463.0
-    url: "https://pds-geosciences.wustl.edu/mgs/mgs-m-mola-5-megdr-l3-v1/mgsl_300x/data/"
-    global_dem_file: "megt90n000fb.img"
-    label_file: "megt90n000fb.lbl"
+    url: https://pds-geosciences.wustl.edu/mgs/mgs-m-mola-5-megdr-l3-v1/mgsl_300x/data/
+    global_dem_file: megt90n000fb.img
+    label_file: megt90n000fb.lbl
   themis:
     enabled: true
     resolution_m: 100.0
-    url: "https://themis-data.asu.edu/data/derived/day/"
-    file_extension: ".jp2"
-
+    url: https://themis-data.asu.edu/data/derived/day/
+    file_extension: .jp2
 preprocessing:
-  target_crs: "ESRI:104971"
+  target_crs: ESRI:104971
   target_resolution_m: 6.0
   coregistration:
-    reference: "ctx"
+    reference: ctx
     max_shift_pixels: 50
-    similarity_metric: "mutual_information"
-    method: "ecc"
+    similarity_metric: mutual_information
+    method: ecc
     max_iterations: 1000
     termination_eps: 1e-6
   normalization:
-    method: "minmax"
+    method: minmax
     per_band: true
-    clip_percentiles: [2, 98]
+    clip_percentiles:
+    - 2
+    - 98
   cloud_mask: false
   patch_size: 512
   overlap: 64
-
 feature_engineering:
   spectral_indices:
-    - name: "RSI"
-      description: "Reduced Slope Index - highlights rocky/bare slopes"
-      formula: "(RED - BLUE) / (RED + BLUE + eps)"
-      requires: ["RED", "BLUE"]
-    - name: "DCI"
-      description: "Dust Cover Index - distinguishes dusty from clean surfaces"
-      formula: "(NIR - RED) / (NIR + RED + eps)"
-      requires: ["NIR", "RED"]
-    - name: "SWI"
-      description: "Short-Wave Index - CRISM-based mineral indicator"
-      formula: "(B2400 - B2300) / (B2400 + B2300 + eps)"
-      requires: ["B2400", "B2300"]
-    - name: "NDSI"
-      description: "Normalized Difference Snow/Ice Index - CO2 frost detection"
-      formula: "(GREEN - RED) / (GREEN + RED + eps)"
-      requires: ["GREEN", "RED"]
-    - name: "REDNESS"
-      description: "Redness index - iron oxide content"
-      formula: "RED / BLUE"
-      requires: ["RED", "BLUE"]
+  - name: RSI
+    description: Reduced Slope Index - highlights rocky/bare slopes
+    formula: (RED - BLUE) / (RED + BLUE + eps)
+    requires:
+    - RED
+    - BLUE
+  - name: DCI
+    description: Dust Cover Index - distinguishes dusty from clean surfaces
+    formula: (NIR - RED) / (NIR + RED + eps)
+    requires:
+    - NIR
+    - RED
+  - name: SWI
+    description: Short-Wave Index - CRISM-based mineral indicator
+    formula: (B2400 - B2300) / (B2400 + B2300 + eps)
+    requires:
+    - B2400
+    - B2300
+  - name: NDSI
+    description: Normalized Difference Snow/Ice Index - CO2 frost detection
+    formula: (GREEN - RED) / (GREEN + RED + eps)
+    requires:
+    - GREEN
+    - RED
+  - name: REDNESS
+    description: Redness index - iron oxide content
+    formula: RED / BLUE
+    requires:
+    - RED
+    - BLUE
   texture:
     enabled: true
-    window_sizes: [3, 5, 7]
-    features: ["entropy", "contrast", "homogeneity", "dissimilarity"]
+    window_sizes:
+    - 3
+    - 5
+    - 7
+    features:
+    - entropy
+    - contrast
+    - homogeneity
+    - dissimilarity
     levels: 256
     symmetric: true
     normed: true
   morphometric:
     enabled: true
-    features: ["slope", "aspect", "curvature_plan", "curvature_profile", "roughness"]
+    features:
+    - slope
+    - aspect
+    - curvature_plan
+    - curvature_profile
+    - roughness
     smoothing_sigma: 1.0
-  eps: 1.0e-8
-
+  eps: 1.0e-08
 training:
-  model: "unet"
-  encoder: "resnet34"
+  model: unet
+  encoder: resnet34
   pretrained: false
   in_channels: 8
   out_channels: 1
   loss:
-    type: "combined"
+    type: combined
     focal_gamma: 2.0
     focal_alpha: 0.25
     dice_weight: 0.5
     focal_weight: 0.5
   optimizer:
-    type: "AdamW"
-    learning_rate: 1.0e-4
-    weight_decay: 1.0e-5
-    betas: [0.9, 0.999]
+    type: AdamW
+    learning_rate: 0.0001
+    weight_decay: 1.0e-05
+    betas:
+    - 0.9
+    - 0.999
   scheduler:
-    type: "ReduceLROnPlateau"
+    type: ReduceLROnPlateau
     factor: 0.5
     patience: 10
-    min_lr: 1.0e-7
-    mode: "max"
+    min_lr: 1.0e-07
+    mode: max
     verbose: true
   training:
     batch_size: 8
@@ -177,37 +225,44 @@ training:
     gradient_accumulation_steps: 2
   augmentation:
     enabled: true
-    rotation: [0, 90, 180, 270]
+    rotation:
+    - 0
+    - 90
+    - 180
+    - 270
     flip_horizontal: true
     flip_vertical: true
-    scale: [0.8, 1.2]
+    scale:
+    - 0.8
+    - 1.2
     brightness_contrast: true
     brightness_limit: 0.2
     contrast_limit: 0.2
     elastic_transform: false
     grid_distortion: false
   validation:
-    method: "spatial_block_cv"
+    method: spatial_block_cv
     block_size_km: 2
     n_folds: 5
     val_split: 0.2
-
 inference:
   sliding_window:
     tile_size: 512
     stride: 256
     batch_size: 16
-    pad_mode: "reflect"
+    pad_mode: reflect
   blending:
-    method: "hanning"
-    overlap_weight: "linear"
-  thresholds: [0.3, 0.5, 0.7]
+    method: hanning
+    overlap_weight: linear
+  thresholds:
+  - 0.3
+  - 0.5
+  - 0.7
   min_gully_area_m2: 500
   min_gully_elongation: 2.0
-
 change_detection:
   enabled: true
-  method: "pixel_comparison"
+  method: pixel_comparison
   kalman_smoothing: true
   kalman:
     process_noise: 0.01
@@ -217,37 +272,43 @@ change_detection:
   expansion_rate_window_months: 6
   iou_threshold_tracking: 0.3
   min_change_area_m2: 100
-
 export:
-  formats: ["GeoTIFF", "GeoJSON", "CSV", "STAC"]
-  cog_compression: "DEFLATE"
-  cog_overviews: [2, 4, 8, 16]
-  cog_resampling: "average"
-  geojson_crs: "EPSG:4326"
-  stac_version: "1.0.0"
-  stac_provider: "Copernicus Master's in Digital Earth"
-  stac_description: "Mars Gully Detection Digital Twin"
-
+  formats:
+  - GeoTIFF
+  - GeoJSON
+  - CSV
+  - STAC
+  cog_compression: DEFLATE
+  cog_overviews:
+  - 2
+  - 4
+  - 8
+  - 16
+  cog_resampling: average
+  geojson_crs: EPSG:4326
+  stac_version: 1.0.0
+  stac_provider: Copernicus Master's in Digital Earth
+  stac_description: Mars Gully Detection Digital Twin
 dashboard:
-  basemap: "THEMIS IR Day"
+  basemap: THEMIS IR Day
   overlay_opacity: 0.7
   include_time_series: true
   include_export_buttons: true
-  map_center: [-35.7, 129.5]
+  map_center:
+  - -35.7
+  - 129.5
   zoom_start: 10
-  colormap_probability: "RdYlBu_r"
-  colormap_change: "RdYlGn"
-
+  colormap_probability: RdYlBu_r
+  colormap_change: RdYlGn
 checkpoint:
   enabled: true
-  save_dir: "data/models/"
+  save_dir: data/models/
   save_every_epochs: 5
-  resume_from: "last"
+  resume_from: last
   keep_n_best: 3
-
 logging:
-  level: "INFO"
-  file: "mars_pipeline.log"
+  level: INFO
+  file: mars_pipeline.log
   tensorboard: true
-  tensorboard_dir: "data/outputs/logs/"
+  tensorboard_dir: data/outputs/logs/
   log_every_n_steps: 10

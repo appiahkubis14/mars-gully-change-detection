@@ -1,79 +1,511 @@
 {
-  "hirise_download:ESP_012821_1440": {
-    "status": "failed",
-    "timestamp": "2026-05-19T15:10:24.222512",
-    "error": "No files found on PDS"
-  },
-  "hirise_download:ESP_016625_1440": {
-    "status": "failed",
-    "timestamp": "2026-05-19T15:10:31.636742",
-    "error": "No files found on PDS"
-  },
-  "hirise_download:ESP_023957_1440": {
-    "status": "failed",
-    "timestamp": "2026-05-19T15:08:04.587122",
-    "error": "No files listed"
-  },
-  "hirise_download:ESP_034579_1440": {
-    "status": "failed",
-    "timestamp": "2026-05-19T15:08:05.589278",
-    "error": "No files listed"
-  },
-  "hirise_download:ESP_055527_1440": {
-    "status": "failed",
-    "timestamp": "2026-05-19T15:08:06.587946",
-    "error": "No files listed"
-  },
-  "hirise_download:ESP_011428_1445": {
-    "status": "failed",
-    "timestamp": "2026-05-19T15:08:07.590276",
-    "error": "No files listed"
-  },
-  "hirise_download:ESP_022351_1445": {
-    "status": "failed",
-    "timestamp": "2026-05-19T09:02:10.937941",
-    "error": "No files listed"
-  },
-  "hirise_download:ESP_034303_1445": {
-    "status": "failed",
-    "timestamp": "2026-05-19T09:02:11.935591",
-    "error": "No files listed"
-  },
-  "hirise_download:ESP_016042_1255": {
-    "status": "failed",
-    "timestamp": "2026-05-19T09:02:12.937538",
-    "error": "No files listed"
-  },
-  "hirise_download:ESP_034313_1255": {
-    "status": "failed",
-    "timestamp": "2026-05-19T09:02:13.940760",
-    "error": "No files listed"
-  },
-  "hirise_download:ESP_047959_1255": {
-    "status": "failed",
-    "timestamp": "2026-05-19T09:02:14.937357",
-    "error": "No files listed"
-  },
   "ctx_download:B02_010415_1440_XI_36S230W": {
     "status": "failed",
-    "timestamp": "2026-05-19T09:02:36.839814",
-    "error": "Download failed"
+    "timestamp": "2026-05-20T01:04:28.409182",
+    "error": "URL resolution failed"
   },
   "ctx_download:G01_018727_1440_XN_36S230W": {
     "status": "failed",
-    "timestamp": "2026-05-19T09:02:56.554525",
-    "error": "Download failed"
+    "timestamp": "2026-05-20T01:04:30.271133",
+    "error": "URL resolution failed"
   },
   "ctx_download:J02_045879_1440_XN_36S230W": {
     "status": "failed",
-    "timestamp": "2026-05-19T09:03:17.453757",
-    "error": "Download failed"
+    "timestamp": "2026-05-20T01:04:32.166932",
+    "error": "URL resolution failed"
   },
   "mola_download:mola_global_4ppd": {
     "status": "done",
-    "timestamp": "2026-05-19T10:30:37.941519",
+    "timestamp": "2026-05-20T13:15:39.504053",
     "metadata": {
       "path": "data\\raw\\mola\\mola_global_463m.tif"
+    }
+  },
+  "ctx_download:B01_009901_1440_XN_36S230W": {
+    "status": "done",
+    "timestamp": "2026-05-20T11:08:33.859560",
+    "metadata": {
+      "path": "data\\raw\\ctx\\gasa\\B01_009901_1440_XN_36S230W.IMG"
+    }
+  },
+  "ctx_download:B08_012736_1444_XN_35S230W": {
+    "status": "done",
+    "timestamp": "2026-05-20T11:09:12.184624",
+    "metadata": {
+      "path": "data\\raw\\ctx\\gasa\\B08_012736_1444_XN_35S230W.IMG"
+    }
+  },
+  "ctx_download:B11_014081_1440_XN_36S230W": {
+    "status": "done",
+    "timestamp": "2026-05-20T11:09:42.726910",
+    "metadata": {
+      "path": "data\\raw\\ctx\\gasa\\B11_014081_1440_XN_36S230W.IMG"
+    }
+  },
+  "ctx_download:B16_016059_1442_XN_35S230W": {
+    "status": "done",
+    "timestamp": "2026-05-20T11:10:20.655007",
+    "metadata": {
+      "path": "data\\raw\\ctx\\gasa\\B16_016059_1442_XN_35S230W.IMG"
+    }
+  },
+  "ctx_download:B19_017048_1440_XN_36S230W": {
+    "status": "done",
+    "timestamp": "2026-05-20T11:11:02.238472",
+    "metadata": {
+      "path": "data\\raw\\ctx\\gasa\\B19_017048_1440_XN_36S230W.IMG"
+    }
+  },
+  "ctx_download:B18_016626_1441_XN_35S230W": {
+    "status": "done",
+    "timestamp": "2026-05-20T11:11:34.120720",
+    "metadata": {
+      "path": "data\\raw\\ctx\\gasa\\B18_016626_1441_XN_35S230W.IMG"
+    }
+  },
+  "ctx_download:G17_024985_1374_XN_42S202W": {
+    "status": "done",
+    "timestamp": "2026-05-20T11:16:19.979351",
+    "metadata": {
+      "path": "data\\raw\\ctx\\palikir\\G17_024985_1374_XN_42S202W.IMG"
+    }
+  },
+  "ctx_download:G18_025407_1376_XN_42S202W": {
+    "status": "done",
+    "timestamp": "2026-05-20T11:18:17.687666",
+    "metadata": {
+      "path": "data\\raw\\ctx\\palikir\\G18_025407_1376_XN_42S202W.IMG"
+    }
+  },
+  "ctx_download:J07_047455_1373_XN_42S202W": {
+    "status": "done",
+    "timestamp": "2026-05-20T11:18:59.883124",
+    "metadata": {
+      "path": "data\\raw\\ctx\\palikir\\J07_047455_1373_XN_42S202W.IMG"
+    }
+  },
+  "ctx_download:J10_048668_1374_XN_42S203W": {
+    "status": "done",
+    "timestamp": "2026-05-20T11:19:10.468904",
+    "metadata": {
+      "path": "data\\raw\\ctx\\palikir\\J10_048668_1374_XN_42S203W.IMG"
+    }
+  },
+  "ctx_download:U21_079316_1372_XN_42S202W": {
+    "status": "done",
+    "timestamp": "2026-05-20T11:27:27.955273",
+    "metadata": {
+      "path": "data\\raw\\ctx\\palikir\\U21_079316_1372_XN_42S202W.IMG"
+    }
+  },
+  "ctx_download:B07_012293_1255_XN_54S012W": {
+    "status": "done",
+    "timestamp": "2026-05-20T11:29:23.999861",
+    "metadata": {
+      "path": "data\\raw\\ctx\\russell\\B07_012293_1255_XN_54S012W.IMG"
+    }
+  },
+  "ctx_download:J03_046090_1245_XN_55S013W": {
+    "status": "done",
+    "timestamp": "2026-05-20T11:32:32.612579",
+    "metadata": {
+      "path": "data\\raw\\ctx\\russell\\J03_046090_1245_XN_55S013W.IMG"
+    }
+  },
+  "ctx_download:K14_058670_1253_XN_54S012W": {
+    "status": "done",
+    "timestamp": "2026-05-20T11:33:04.078143",
+    "metadata": {
+      "path": "data\\raw\\ctx\\russell\\K14_058670_1253_XN_54S012W.IMG"
+    }
+  },
+  "ctx_download:N13_067585_1254_XN_54S013W": {
+    "status": "done",
+    "timestamp": "2026-05-20T11:38:43.688737",
+    "metadata": {
+      "path": "data\\raw\\ctx\\russell\\N13_067585_1254_XN_54S013W.IMG"
+    }
+  },
+  "ctx_download:V16_086100_1256_XN_54S014W": {
+    "status": "done",
+    "timestamp": "2026-05-20T11:44:59.791853",
+    "metadata": {
+      "path": "data\\raw\\ctx\\russell\\V16_086100_1256_XN_54S014W.IMG"
+    }
+  },
+  "project:project_B01_009901_1440_XN_36S230W.IMG": {
+    "status": "failed",
+    "timestamp": "2026-05-20T11:57:01.652096",
+    "error": "Writer does not exist for driver: PDS"
+  },
+  "project:project_G17_024985_1374_XN_42S202W.IMG": {
+    "status": "failed",
+    "timestamp": "2026-05-20T11:57:01.672169",
+    "error": "Writer does not exist for driver: PDS"
+  },
+  "project:project_B07_012293_1255_XN_54S012W.IMG": {
+    "status": "failed",
+    "timestamp": "2026-05-20T11:57:01.687955",
+    "error": "Writer does not exist for driver: PDS"
+  },
+  "project:project_B01_009901_1440_XN_36S230W.tif": {
+    "status": "failed",
+    "timestamp": "2026-05-20T13:39:28.087281",
+    "error": "Unable to compute a transformation between pixel/line and georeferenced coordinates for data\\raw\\ctx\\gasa\\B01_009901_1440_XN_36S230W.tif. There is no affine transformation and no GCPs. Specify transformation option SRC_METHOD=NO_GEOTRANSFORM to bypass this check."
+  },
+  "project:project_G17_024985_1374_XN_42S202W.tif": {
+    "status": "failed",
+    "timestamp": "2026-05-20T13:39:28.243974",
+    "error": "Unable to compute a transformation between pixel/line and georeferenced coordinates for data\\raw\\ctx\\palikir\\G17_024985_1374_XN_42S202W.tif. There is no affine transformation and no GCPs. Specify transformation option SRC_METHOD=NO_GEOTRANSFORM to bypass this check."
+  },
+  "project:project_B07_012293_1255_XN_54S012W.tif": {
+    "status": "failed",
+    "timestamp": "2026-05-20T12:07:28.993816",
+    "error": "Unable to compute a transformation between pixel/line and georeferenced coordinates for data\\raw\\ctx\\russell\\B07_012293_1255_XN_54S012W.tif. There is no affine transformation and no GCPs. Specify transformation option SRC_METHOD=NO_GEOTRANSFORM to bypass this check."
+  },
+  "project:project_Gasa_Crater_mola.tif": {
+    "status": "done",
+    "timestamp": "2026-05-20T12:08:22.745652",
+    "metadata": {
+      "output": "data\\processed\\projected\\gasa_mola_projected.tif"
+    }
+  },
+  "project:project_Palikir_Crater_mola.tif": {
+    "status": "done",
+    "timestamp": "2026-05-20T13:39:34.012289",
+    "metadata": {
+      "output": "data\\processed\\projected\\secondary_mola_projected.tif"
+    }
+  },
+  "project:project_Russell_Crater_mola.tif": {
+    "status": "done",
+    "timestamp": "2026-05-20T13:39:39.107338",
+    "metadata": {
+      "output": "data\\processed\\projected\\tertiary_mola_projected.tif"
+    }
+  },
+  "normalize:normalize_gasa_mola_projected.tif": {
+    "status": "done",
+    "timestamp": "2026-05-20T12:10:38.163436",
+    "metadata": {
+      "output": "data\\processed\\normalised\\gasa_mola_projected_norm.tif"
+    }
+  },
+  "ctx_download:B05_011536_1440_XN_36S230W": {
+    "status": "done",
+    "timestamp": "2026-05-20T12:13:24.109404",
+    "metadata": {
+      "path": "data\\raw\\ctx\\gasa\\B05_011536_1440_XN_36S230W.tif",
+      "img": "data\\raw\\ctx\\gasa\\B05_011536_1440_XN_36S230W.IMG"
+    }
+  },
+  "ctx_download:B06_011879_1443_XI_35S231W": {
+    "status": "done",
+    "timestamp": "2026-05-20T12:14:02.885095",
+    "metadata": {
+      "path": "data\\raw\\ctx\\gasa\\B06_011879_1443_XI_35S231W.tif",
+      "img": "data\\raw\\ctx\\gasa\\B06_011879_1443_XI_35S231W.IMG"
+    }
+  },
+  "ctx_download:B01_009879_1252_XN_54S347W": {
+    "status": "done",
+    "timestamp": "2026-05-20T12:16:21.845060",
+    "metadata": {
+      "path": "data\\raw\\ctx\\russell\\B01_009879_1252_XN_54S347W.tif",
+      "img": "data\\raw\\ctx\\russell\\B01_009879_1252_XN_54S347W.IMG"
+    }
+  },
+  "ctx_download:B02_010301_1254_XI_54S347W": {
+    "status": "done",
+    "timestamp": "2026-05-20T12:17:25.420309",
+    "metadata": {
+      "path": "data\\raw\\ctx\\russell\\B02_010301_1254_XI_54S347W.tif",
+      "img": "data\\raw\\ctx\\russell\\B02_010301_1254_XI_54S347W.IMG"
+    }
+  },
+  "ctx_download:B02_010446_1253_XN_54S347W": {
+    "status": "done",
+    "timestamp": "2026-05-20T12:19:15.449375",
+    "metadata": {
+      "path": "data\\raw\\ctx\\russell\\B02_010446_1253_XN_54S347W.tif",
+      "img": "data\\raw\\ctx\\russell\\B02_010446_1253_XN_54S347W.IMG"
+    }
+  },
+  "ctx_download:B03_010657_1253_XI_54S347W": {
+    "status": "done",
+    "timestamp": "2026-05-20T12:21:12.879055",
+    "metadata": {
+      "path": "data\\raw\\ctx\\russell\\B03_010657_1253_XI_54S347W.tif",
+      "img": "data\\raw\\ctx\\russell\\B03_010657_1253_XI_54S347W.IMG"
+    }
+  },
+  "ctx_download:B05_011435_1253_XI_54S347W": {
+    "status": "done",
+    "timestamp": "2026-05-20T12:22:17.025701",
+    "metadata": {
+      "path": "data\\raw\\ctx\\russell\\B05_011435_1253_XI_54S347W.tif",
+      "img": "data\\raw\\ctx\\russell\\B05_011435_1253_XI_54S347W.IMG"
+    }
+  },
+  "ctx_download:B05_011580_1253_XN_54S347W": {
+    "status": "done",
+    "timestamp": "2026-05-20T12:23:28.645462",
+    "metadata": {
+      "path": "data\\raw\\ctx\\russell\\B05_011580_1253_XN_54S347W.tif",
+      "img": "data\\raw\\ctx\\russell\\B05_011580_1253_XN_54S347W.IMG"
+    }
+  },
+  "project:project_ESP_012024_1440_RED.JP2": {
+    "status": "failed",
+    "timestamp": "2026-05-20T12:27:25.777070",
+    "error": "JP2 driver only supports creating Byte, GDT_Int16, GDT_UInt16, GDT_Int32, GDT_UInt32"
+  },
+  "project:project_ESP_020661_1440_RED.JP2": {
+    "status": "failed",
+    "timestamp": "2026-05-20T12:27:31.381976",
+    "error": "JP2 driver only supports creating Byte, GDT_Int16, GDT_UInt16, GDT_Int32, GDT_UInt32"
+  },
+  "project:project_ESP_027597_1440_RED.JP2": {
+    "status": "failed",
+    "timestamp": "2026-05-20T12:27:37.309305",
+    "error": "JP2 driver only supports creating Byte, GDT_Int16, GDT_UInt16, GDT_Int32, GDT_UInt32"
+  },
+  "project:project_PSP_005943_1380_RED.JP2": {
+    "status": "failed",
+    "timestamp": "2026-05-20T12:27:44.712664",
+    "error": "JP2 driver only supports creating Byte, GDT_Int16, GDT_UInt16, GDT_Int32, GDT_UInt32"
+  },
+  "project:project_ESP_021555_1380_RED.JP2": {
+    "status": "failed",
+    "timestamp": "2026-05-20T12:27:51.473435",
+    "error": "JP2 driver only supports creating Byte, GDT_Int16, GDT_UInt16, GDT_Int32, GDT_UInt32"
+  },
+  "project:project_ESP_031102_1380_RED.JP2": {
+    "status": "failed",
+    "timestamp": "2026-05-20T12:27:58.320965",
+    "error": "JP2 driver only supports creating Byte, GDT_Int16, GDT_UInt16, GDT_Int32, GDT_UInt32"
+  },
+  "project:project_ESP_039502_1380_RED.JP2": {
+    "status": "failed",
+    "timestamp": "2026-05-20T12:28:05.932107",
+    "error": "JP2 driver only supports creating Byte, GDT_Int16, GDT_UInt16, GDT_Int32, GDT_UInt32"
+  },
+  "project:project_PSP_001440_1255_RED.JP2": {
+    "status": "failed",
+    "timestamp": "2026-05-20T12:28:08.733772",
+    "error": "Too many points (10201 out of 10201) failed to transform, unable to compute output bounds."
+  },
+  "project:project_ESP_018872_1255_RED.JP2": {
+    "status": "failed",
+    "timestamp": "2026-05-20T12:28:11.421205",
+    "error": "Too many points (10201 out of 10201) failed to transform, unable to compute output bounds."
+  },
+  "project:project_ESP_030898_1255_RED.JP2": {
+    "status": "failed",
+    "timestamp": "2026-05-20T12:28:13.817292",
+    "error": "Too many points (10201 out of 10201) failed to transform, unable to compute output bounds."
+  },
+  "project:project_ESP_034234_1255_RED.JP2": {
+    "status": "failed",
+    "timestamp": "2026-05-20T12:28:16.020951",
+    "error": "Too many points (10201 out of 10201) failed to transform, unable to compute output bounds."
+  },
+  "project:project_ESP_046867_1255_RED.JP2": {
+    "status": "failed",
+    "timestamp": "2026-05-20T12:28:17.677345",
+    "error": "Too many points (10201 out of 10201) failed to transform, unable to compute output bounds."
+  },
+  "project:project_ESP_047078_1255_RED.JP2": {
+    "status": "failed",
+    "timestamp": "2026-05-20T12:28:19.519899",
+    "error": "Too many points (10201 out of 10201) failed to transform, unable to compute output bounds."
+  },
+  "project:project_B01_009879_1252_XN_54S347W.tif": {
+    "status": "failed",
+    "timestamp": "2026-05-20T13:39:28.379968",
+    "error": "Unable to compute a transformation between pixel/line and georeferenced coordinates for data\\raw\\ctx\\russell\\B01_009879_1252_XN_54S347W.tif. There is no affine transformation and no GCPs. Specify transformation option SRC_METHOD=NO_GEOTRANSFORM to bypass this check."
+  },
+  "project:project_PSP_004060_1440_RED.tif": {
+    "status": "done",
+    "timestamp": "2026-05-20T13:25:46.204003",
+    "metadata": {
+      "output": "data\\processed\\projected\\primary_PSP_004060_1440_projected.tif"
+    }
+  },
+  "project:project_ESP_012024_1440_RED.tif": {
+    "status": "done",
+    "timestamp": "2026-05-20T13:26:22.909371",
+    "metadata": {
+      "output": "data\\processed\\projected\\primary_ESP_012024_1440_projected.tif"
+    }
+  },
+  "project:project_ESP_020661_1440_RED.tif": {
+    "status": "done",
+    "timestamp": "2026-05-20T13:27:06.095418",
+    "metadata": {
+      "output": "data\\processed\\projected\\primary_ESP_020661_1440_projected.tif"
+    }
+  },
+  "project:project_ESP_027597_1440_RED.tif": {
+    "status": "done",
+    "timestamp": "2026-05-20T13:28:55.037057",
+    "metadata": {
+      "output": "data\\processed\\projected\\primary_ESP_027597_1440_projected.tif"
+    }
+  },
+  "coregister:coreg_ESP_012024_1440_RED.tif": {
+    "status": "done",
+    "timestamp": "2026-05-20T13:36:28.798424",
+    "metadata": {
+      "output": "data\\processed\\coregistered\\primary\\ESP_012024_1440_coregistered.tif"
+    }
+  },
+  "coregister:coreg_ESP_020661_1440_RED.tif": {
+    "status": "done",
+    "timestamp": "2026-05-20T13:37:35.242374",
+    "metadata": {
+      "output": "data\\processed\\coregistered\\primary\\ESP_020661_1440_coregistered.tif"
+    }
+  },
+  "coregister:coreg_ESP_027597_1440_RED.tif": {
+    "status": "done",
+    "timestamp": "2026-05-20T13:38:16.749504",
+    "metadata": {
+      "output": "data\\processed\\coregistered\\primary\\ESP_027597_1440_coregistered.tif"
+    }
+  },
+  "coregister:coreg_ESP_021555_1380_RED.tif": {
+    "status": "done",
+    "timestamp": "2026-05-20T13:39:06.562749",
+    "metadata": {
+      "output": "data\\processed\\coregistered\\secondary\\ESP_021555_1380_coregistered.tif"
+    }
+  },
+  "project:project_ESP_012024_1440_coregistered.tif": {
+    "status": "done",
+    "timestamp": "2026-05-20T13:39:13.212597",
+    "metadata": {
+      "output": "data\\processed\\projected\\primary_ESP_012024_1440_projected.tif"
+    }
+  },
+  "project:project_ESP_020661_1440_coregistered.tif": {
+    "status": "done",
+    "timestamp": "2026-05-20T13:39:17.964216",
+    "metadata": {
+      "output": "data\\processed\\projected\\primary_ESP_020661_1440_projected.tif"
+    }
+  },
+  "project:project_ESP_027597_1440_coregistered.tif": {
+    "status": "done",
+    "timestamp": "2026-05-20T13:39:22.660284",
+    "metadata": {
+      "output": "data\\processed\\projected\\primary_ESP_027597_1440_projected.tif"
+    }
+  },
+  "project:project_ESP_021555_1380_coregistered.tif": {
+    "status": "done",
+    "timestamp": "2026-05-20T13:39:27.921593",
+    "metadata": {
+      "output": "data\\processed\\projected\\secondary_ESP_021555_1380_projected.tif"
+    }
+  },
+  "normalize:normalize_primary_ESP_012024_1440_projected.tif": {
+    "status": "done",
+    "timestamp": "2026-05-20T13:39:50.817173",
+    "metadata": {
+      "output": "data\\processed\\normalised\\primary_ESP_012024_1440_projected_norm.tif"
+    }
+  },
+  "normalize:normalize_primary_ESP_020661_1440_projected.tif": {
+    "status": "done",
+    "timestamp": "2026-05-20T13:40:02.509112",
+    "metadata": {
+      "output": "data\\processed\\normalised\\primary_ESP_020661_1440_projected_norm.tif"
+    }
+  },
+  "normalize:normalize_primary_ESP_027597_1440_projected.tif": {
+    "status": "done",
+    "timestamp": "2026-05-20T13:40:14.592422",
+    "metadata": {
+      "output": "data\\processed\\normalised\\primary_ESP_027597_1440_projected_norm.tif"
+    }
+  },
+  "normalize:normalize_secondary_ESP_021555_1380_projected.tif": {
+    "status": "done",
+    "timestamp": "2026-05-20T13:40:28.531733",
+    "metadata": {
+      "output": "data\\processed\\normalised\\secondary_ESP_021555_1380_projected_norm.tif"
+    }
+  },
+  "normalize:normalize_primary_mola_projected.tif": {
+    "status": "done",
+    "timestamp": "2026-05-20T13:41:12.867493",
+    "metadata": {
+      "output": "data\\processed\\normalised\\primary_mola_projected_norm.tif"
+    }
+  },
+  "normalize:normalize_secondary_mola_projected.tif": {
+    "status": "done",
+    "timestamp": "2026-05-20T13:41:27.842944",
+    "metadata": {
+      "output": "data\\processed\\normalised\\secondary_mola_projected_norm.tif"
+    }
+  },
+  "normalize:normalize_tertiary_mola_projected.tif": {
+    "status": "done",
+    "timestamp": "2026-05-20T13:41:42.754083",
+    "metadata": {
+      "output": "data\\processed\\normalised\\tertiary_mola_projected_norm.tif"
+    }
+  },
+  "project:project_B01_009901_1440_XN_36S230W_geo.tif": {
+    "status": "done",
+    "timestamp": "2026-05-20T13:48:30.623064",
+    "metadata": {
+      "output": "data\\processed\\projected\\primary_ctx_projected.tif"
+    }
+  },
+  "project:project_G17_024985_1374_XN_42S202W_geo.tif": {
+    "status": "done",
+    "timestamp": "2026-05-20T13:49:17.334090",
+    "metadata": {
+      "output": "data\\processed\\projected\\secondary_ctx_projected.tif"
+    }
+  },
+  "project:project_B01_009879_1252_XN_54S347W_geo.tif": {
+    "status": "done",
+    "timestamp": "2026-05-20T13:49:29.912819",
+    "metadata": {
+      "output": "data\\processed\\projected\\tertiary_ctx_projected.tif"
+    }
+  },
+  "normalize:normalize_primary_ctx_projected.tif": {
+    "status": "done",
+    "timestamp": "2026-05-20T13:49:42.974837",
+    "metadata": {
+      "output": "data\\processed\\normalised\\primary_ctx_projected_norm.tif"
+    }
+  },
+  "normalize:normalize_secondary_ctx_projected.tif": {
+    "status": "done",
+    "timestamp": "2026-05-20T13:49:59.010329",
+    "metadata": {
+      "output": "data\\processed\\normalised\\secondary_ctx_projected_norm.tif"
+    }
+  },
+  "normalize:normalize_tertiary_ctx_projected.tif": {
+    "status": "done",
+    "timestamp": "2026-05-20T13:50:10.963787",
+    "metadata": {
+      "output": "data\\processed\\normalised\\tertiary_ctx_projected_norm.tif"
+    }
+  },
+  "composite:composite_composite_primary.tif": {
+    "status": "done",
+    "timestamp": "2026-05-20T13:55:37.198420",
+    "metadata": {
+      "n_inputs": 3,
+      "output": "data\\processed\\composites\\composite_primary.tif"
     }
   }
 }

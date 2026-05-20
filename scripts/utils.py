@@ -1,3 +1,9 @@
+import warnings as _warnings
+_warnings.filterwarnings("ignore", message=".*PROJ.*")
+_warnings.filterwarnings("ignore", message=".*geotransform.*")
+_warnings.filterwarnings("ignore", message=".*NotGeoreferencedWarning.*")
+_warnings.filterwarnings("ignore", category=UserWarning)
+
 """
 Shared utilities: logging, checkpointing, CRS handling, file I/O
 """
@@ -19,6 +25,36 @@ import yaml
 
 # ─── Logging ──────────────────────────────────────────────────────────────────
 
+
+def _fix_proj_env() -> None:
+    """
+    Isolate rasterio from conflicting PROJ installations (e.g. PostgreSQL).
+    Must be called before any rasterio/pyproj import.
+    Sets PROJ_DATA and PROJ_LIB to rasterio's bundled proj database.
+    """
+    import os
+    try:
+        import importlib.util
+        spec = importlib.util.find_spec("rasterio")
+        if spec and spec.origin:
+            rasterio_dir = Path(spec.origin).parent
+            proj_dir = rasterio_dir / "proj"
+            if not proj_dir.exists():
+                # Try pyproj bundle
+                spec2 = importlib.util.find_spec("pyproj")
+                if spec2 and spec2.origin:
+                    proj_dir = Path(spec2.origin).parent / "proj_dir" / "share" / "proj"
+            if proj_dir.exists():
+                os.environ["PROJ_DATA"] = str(proj_dir)
+                os.environ["PROJ_LIB"]  = str(proj_dir)
+    except Exception:
+        pass
+
+
+# Fix PROJ at module import time (before any rasterio usage)
+_fix_proj_env()
+
+
 def setup_logging(
     level: str = "INFO",
     log_file: Optional[str] = None,
@@ -34,8 +70,19 @@ def setup_logging(
         datefmt="%Y-%m-%d %H:%M:%S"
     )
 
-    # Console
-    ch = logging.StreamHandler(sys.stdout)
+    # Console — force UTF-8 on Windows to prevent cp1252 UnicodeEncodeError.
+    import io
+    if sys.platform == "win32":
+        try:
+            # Wrap stdout in a UTF-8 writer that replaces unencodable chars
+            utf8_stdout = io.TextIOWrapper(
+                sys.stdout.buffer, encoding="utf-8", errors="replace", line_buffering=True
+            )
+        except AttributeError:
+            utf8_stdout = sys.stdout   # fallback for IDEs / redirected streams
+    else:
+        utf8_stdout = sys.stdout
+    ch = logging.StreamHandler(utf8_stdout)
     ch.setFormatter(fmt)
     logger.addHandler(ch)
 

@@ -37,7 +37,7 @@ def median_composite(
         log.warning("No valid inputs for composite")
         return None
     if len(valid) == 1:
-        log.info("Only 1 input — copying as composite")
+        log.info("Only 1 input  -  copying as composite")
         import shutil
         shutil.copy2(valid[0], output_path)
         return output_path
@@ -79,7 +79,7 @@ def median_composite(
                 "n_inputs": len(valid),
                 "output": str(output_path)
             })
-        log.info(f"✓ Composite from {len(valid)} images: {output_path.name}")
+        log.info(f"[OK] Composite from {len(valid)} images: {output_path.name}")
         return output_path
 
     except Exception as e:
@@ -105,9 +105,57 @@ def composite_by_year(
     {year_str: composite_path}
     """
     results = {}
+    output_dir = Path(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
     for year, paths in date_file_map.items():
         out = output_dir / f"composite_{year}.tif"
         result = median_composite(paths, out, checkpoint, force)
         if result:
             results[year] = result
     return results
+
+
+def assign_ctx_geotransform(tif_path: Path, product_id: str = None) -> Path:
+    """
+    Assign a rough geotransform to a CTX tif that has none.
+    Extracts lat/lon from the product_id filename and assigns
+    a Simple Cylindrical (Mars) geotransform.
+    """
+    import re, math
+    import rasterio
+    from affine import Affine
+
+    pid = product_id or tif_path.stem
+    m = re.search(r"(\d+)([NS])(\d+)([EW])", pid.upper())
+    if not m:
+        return tif_path
+
+    lat = float(m.group(1)) * (-1 if m.group(2)=="S" else 1)
+    lon_raw = float(m.group(3))
+    lon = lon_raw if m.group(4)=="E" else 360 - lon_raw
+
+    MARS_R = 3_396_190.0
+    x_ctr = math.radians(lon) * MARS_R
+    y_ctr = math.radians(lat) * MARS_R
+
+    try:
+        with rasterio.open(tif_path) as src:
+            W, H = src.width, src.height
+            profile = src.profile.copy()
+            data = src.read()
+    except Exception:
+        return tif_path
+
+    # CTX pixel is ~6m at native, but tif may be resampled
+    # Use 6m/px as a reasonable default
+    px = 6.0
+    x0 = x_ctr - (W / 2) * px
+    y0 = y_ctr + (H / 2) * px  # top-left corner
+
+    transform = Affine(px, 0, x0, 0, -px, y0)
+    profile.update(transform=transform)
+
+    out_path = tif_path.with_stem(tif_path.stem + "_geo")
+    with rasterio.open(out_path, "w", **profile) as dst:
+        dst.write(data)
+    return out_path
