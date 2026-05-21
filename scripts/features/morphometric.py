@@ -180,9 +180,21 @@ def compute_morphometrics_from_raster(
     """
     try:
         import rasterio
+        from rasterio.enums import Resampling
+        MAX_DEM_SIZE = 4096  # cap DEM to avoid OOM on projected 20k px DEMs
         with rasterio.open(dem_path) as src:
-            dem = src.read(1).astype(np.float32)
-            cell_size = src.res[0]  # x pixel size
+            h, w = src.height, src.width
+            scale = min(1.0, MAX_DEM_SIZE / max(h, w))
+            if scale < 1.0:
+                out_h = max(64, int(h * scale))
+                out_w = max(64, int(w * scale))
+                dem = src.read(1, out_shape=(out_h, out_w),
+                               resampling=Resampling.bilinear).astype(np.float32)
+                cell_size = src.res[0] / scale  # adjusted pixel size
+                log.debug(f"DEM downsampled to {out_h}x{out_w} (scale={scale:.3f})")
+            else:
+                dem = src.read(1).astype(np.float32)
+                cell_size = src.res[0]
     except Exception as e:
         log.error(f"Cannot open DEM {dem_path}: {e}")
         return {}
@@ -195,3 +207,15 @@ def compute_morphometrics_from_raster(
     smoothing = morph_cfg.get("smoothing_sigma", 1.0)
 
     return compute_all_morphometrics(dem, cell_size, smoothing, features)
+
+
+def compute_slope(dem: np.ndarray, resolution: float = 463.0) -> np.ndarray:
+    """Compute slope in degrees from DEM."""
+    slope, _ = compute_slope_aspect(dem, resolution)
+    return slope
+
+
+def compute_aspect(dem: np.ndarray, resolution: float = 463.0) -> np.ndarray:
+    """Compute aspect in degrees (0-360) from DEM."""
+    _, aspect = compute_slope_aspect(dem, resolution)
+    return aspect

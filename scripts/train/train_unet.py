@@ -172,7 +172,7 @@ def _save_checkpoint(
     if is_best:
         import shutil
         shutil.copy2(path, best_path)
-        log.info(f"New best model saved → {best_path}")
+        log.info(f"New best model saved -> {best_path}")
 
 
 def _load_checkpoint(
@@ -224,10 +224,23 @@ def train(cfg_path: str = "config.yaml", resume: Optional[str] = None) -> None:
     log.info(f"Training on {device}")
 
     # ------------------------------------------------------------------ data
-    log.info("Building dataloaders …")
-    loaders = build_dataloaders(cfg)
-    train_loader = loaders["train"]
-    val_loader = loaders["val"]
+    log.info("Building dataloaders ...")
+    patch_dir    = Path(cfg.get("paths", {}).get("patches_dir", "data/processed/patches"))
+    img_dir      = patch_dir / "images"
+    msk_dir      = patch_dir / "masks"
+
+    if not img_dir.exists() or not any(img_dir.glob("*.npy")):
+        log.error(
+            f"No patch images found in {img_dir}. "
+            "Run '--step labels' to extract patches first."
+        )
+        return
+
+    train_loader, val_loader = build_dataloaders(
+        cfg,
+        train_img_dir=img_dir,
+        train_msk_dir=msk_dir,
+    )
 
     # ------------------------------------------------------------------ model
     model = build_model(cfg).to(device)
@@ -250,7 +263,7 @@ def train(cfg_path: str = "config.yaml", resume: Optional[str] = None) -> None:
         patience=sched_cfg.get("patience", 10),
         min_lr=sched_cfg.get("min_lr", 1e-7),
     )
-    scaler = torch.cuda.amp.GradScaler(enabled=(device.type == "cuda"))
+    scaler = torch.amp.GradScaler("cuda", enabled=(device.type == "cuda"))
 
     # ------------------------------------------------------------------ resume
     start_epoch = 0
@@ -356,5 +369,5 @@ def train(cfg_path: str = "config.yaml", resume: Optional[str] = None) -> None:
     with open(history_path, "w") as f:
         json.dump(history, f, indent=2)
     log.info(f"Training complete. Best Val IoU = {best_iou:.4f}")
-    log.info(f"History saved → {history_path}")
-    log.info(f"Best model     → {best_ckpt}")
+    log.info(f"History saved -> {history_path}")
+    log.info(f"Best model     -> {best_ckpt}")

@@ -14,7 +14,7 @@ Output: (B, 1, H, W)  sigmoid probability [0, 1]
 
 import sys
 from pathlib import Path
-from typing import List, Optional, Tuple
+from typing import List, Optional, Tuple, Dict
 
 import torch
 import torch.nn as nn
@@ -271,4 +271,4 @@ if __name__ == "__main__":
     print(f"Input:  {x.shape}")
     print(f"Output: {y.shape}")
     assert y.shape == (2, 1, 512, 512), f"Unexpected output shape: {y.shape}"
-    print("✓ U-Net shape test passed")
+    print("[OK] U-Net shape test passed")

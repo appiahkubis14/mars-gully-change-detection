@@ -507,5 +507,257 @@
       "n_inputs": 3,
       "output": "data\\processed\\composites\\composite_primary.tif"
     }
+  },
+  "features:features_primary_ESP_012024_1440_projected_norm": {
+    "status": "done",
+    "timestamp": "2026-05-20T16:11:17.595758",
+    "metadata": {
+      "shape": [
+        19,
+        3276,
+        4096
+      ],
+      "channels": [
+        "hirise_b1",
+        "tex_entropy_w3",
+        "tex_contrast_w3",
+        "tex_homogeneity_w3",
+        "tex_dissimilarity_w3",
+        "tex_entropy_w5",
+        "tex_contrast_w5",
+        "tex_homogeneity_w5",
+        "tex_dissimilarity_w5",
+        "tex_entropy_w7",
+        "tex_contrast_w7",
+        "tex_homogeneity_w7",
+        "tex_dissimilarity_w7",
+        "ctx_pan",
+        "dem_slope",
+        "dem_aspect",
+        "dem_curvature_plan",
+        "dem_curvature_profile",
+        "dem_roughness"
+      ],
+      "npz": "data\\processed\\feature_stacks\\primary_ESP_012024_1440_projected_norm_features.npz"
+    }
+  },
+  "features:features_primary_ESP_020661_1440_projected_norm": {
+    "status": "done",
+    "timestamp": "2026-05-20T16:12:51.945026",
+    "metadata": {
+      "shape": [
+        19,
+        3276,
+        4096
+      ],
+      "channels": [
+        "hirise_b1",
+        "tex_entropy_w3",
+        "tex_contrast_w3",
+        "tex_homogeneity_w3",
+        "tex_dissimilarity_w3",
+        "tex_entropy_w5",
+        "tex_contrast_w5",
+        "tex_homogeneity_w5",
+        "tex_dissimilarity_w5",
+        "tex_entropy_w7",
+        "tex_contrast_w7",
+        "tex_homogeneity_w7",
+        "tex_dissimilarity_w7",
+        "ctx_pan",
+        "dem_slope",
+        "dem_aspect",
+        "dem_curvature_plan",
+        "dem_curvature_profile",
+        "dem_roughness"
+      ],
+      "npz": "data\\processed\\feature_stacks\\primary_ESP_020661_1440_projected_norm_features.npz"
+    }
+  },
+  "features:features_primary_ESP_027597_1440_projected_norm": {
+    "status": "done",
+    "timestamp": "2026-05-20T16:14:15.622521",
+    "metadata": {
+      "shape": [
+        19,
+        3276,
+        4096
+      ],
+      "channels": [
+        "hirise_b1",
+        "tex_entropy_w3",
+        "tex_contrast_w3",
+        "tex_homogeneity_w3",
+        "tex_dissimilarity_w3",
+        "tex_entropy_w5",
+        "tex_contrast_w5",
+        "tex_homogeneity_w5",
+        "tex_dissimilarity_w5",
+        "tex_entropy_w7",
+        "tex_contrast_w7",
+        "tex_homogeneity_w7",
+        "tex_dissimilarity_w7",
+        "ctx_pan",
+        "dem_slope",
+        "dem_aspect",
+        "dem_curvature_plan",
+        "dem_curvature_profile",
+        "dem_roughness"
+      ],
+      "npz": "data\\processed\\feature_stacks\\primary_ESP_027597_1440_projected_norm_features.npz"
+    }
+  },
+  "features:features_composite_primary": {
+    "status": "done",
+    "timestamp": "2026-05-20T16:15:39.378266",
+    "metadata": {
+      "shape": [
+        19,
+        3276,
+        4096
+      ],
+      "channels": [
+        "hirise_b1",
+        "tex_entropy_w3",
+        "tex_contrast_w3",
+        "tex_homogeneity_w3",
+        "tex_dissimilarity_w3",
+        "tex_entropy_w5",
+        "tex_contrast_w5",
+        "tex_homogeneity_w5",
+        "tex_dissimilarity_w5",
+        "tex_entropy_w7",
+        "tex_contrast_w7",
+        "tex_homogeneity_w7",
+        "tex_dissimilarity_w7",
+        "ctx_pan",
+        "dem_slope",
+        "dem_aspect",
+        "dem_curvature_plan",
+        "dem_curvature_profile",
+        "dem_roughness"
+      ],
+      "npz": "data\\processed\\feature_stacks\\composite_primary_features.npz"
+    }
+  },
+  "features:features_secondary_ESP_021555_1380_projected_norm": {
+    "status": "done",
+    "timestamp": "2026-05-20T16:16:57.576588",
+    "metadata": {
+      "shape": [
+        19,
+        3686,
+        4096
+      ],
+      "channels": [
+        "hirise_b1",
+        "tex_entropy_w3",
+        "tex_contrast_w3",
+        "tex_homogeneity_w3",
+        "tex_dissimilarity_w3",
+        "tex_entropy_w5",
+        "tex_contrast_w5",
+        "tex_homogeneity_w5",
+        "tex_dissimilarity_w5",
+        "tex_entropy_w7",
+        "tex_contrast_w7",
+        "tex_homogeneity_w7",
+        "tex_dissimilarity_w7",
+        "ctx_pan",
+        "dem_slope",
+        "dem_aspect",
+        "dem_curvature_plan",
+        "dem_curvature_profile",
+        "dem_roughness"
+      ],
+      "npz": "data\\processed\\feature_stacks\\secondary_ESP_021555_1380_projected_norm_features.npz"
+    }
+  },
+  "features:features_composite_secondary": {
+    "status": "done",
+    "timestamp": "2026-05-20T16:18:14.682458",
+    "metadata": {
+      "shape": [
+        19,
+        3686,
+        4096
+      ],
+      "channels": [
+        "hirise_b1",
+        "tex_entropy_w3",
+        "tex_contrast_w3",
+        "tex_homogeneity_w3",
+        "tex_dissimilarity_w3",
+        "tex_entropy_w5",
+        "tex_contrast_w5",
+        "tex_homogeneity_w5",
+        "tex_dissimilarity_w5",
+        "tex_entropy_w7",
+        "tex_contrast_w7",
+        "tex_homogeneity_w7",
+        "tex_dissimilarity_w7",
+        "ctx_pan",
+        "dem_slope",
+        "dem_aspect",
+        "dem_curvature_plan",
+        "dem_curvature_profile",
+        "dem_roughness"
+      ],
+      "npz": "data\\processed\\feature_stacks\\composite_secondary_features.npz"
+    }
+  },
+  "features:features_composite_tertiary_ctx_projected_norm": {
+    "status": "done",
+    "timestamp": "2026-05-20T16:19:25.767103",
+    "metadata": {
+      "shape": [
+        19,
+        3276,
+        4096
+      ],
+      "channels": [
+        "hirise_b1",
+        "tex_entropy_w3",
+        "tex_contrast_w3",
+        "tex_homogeneity_w3",
+        "tex_dissimilarity_w3",
+        "tex_entropy_w5",
+        "tex_contrast_w5",
+        "tex_homogeneity_w5",
+        "tex_dissimilarity_w5",
+        "tex_entropy_w7",
+        "tex_contrast_w7",
+        "tex_homogeneity_w7",
+        "tex_dissimilarity_w7",
+        "ctx_pan",
+        "dem_slope",
+        "dem_aspect",
+        "dem_curvature_plan",
+        "dem_curvature_profile",
+        "dem_roughness"
+      ],
+      "npz": "data\\processed\\feature_stacks\\composite_tertiary_ctx_projected_norm_features.npz"
+    }
+  },
+  "labels:labels_Gasa Crater": {
+    "status": "done",
+    "timestamp": "2026-05-21T08:49:37.432652",
+    "metadata": {
+      "n_masks": 5
+    }
+  },
+  "labels:labels_Palikir Crater": {
+    "status": "done",
+    "timestamp": "2026-05-21T08:49:37.611631",
+    "metadata": {
+      "n_masks": 5
+    }
+  },
+  "labels:labels_Russell Crater": {
+    "status": "done",
+    "timestamp": "2026-05-21T08:49:37.794305",
+    "metadata": {
+      "n_masks": 5
+    }
   }
 }

@@ -59,15 +59,6 @@ log = logging.getLogger("main")
 
 
 # ---------------------------------------------------------------------------
-# Utility functions
-# ---------------------------------------------------------------------------
-
-def _name_to_short(name: str) -> str:
-    """Convert site name to short key: 'Gasa Crater' -> 'gasa'"""
-    return name.lower().split()[0]
-
-
-# ---------------------------------------------------------------------------
 # Config helper
 # ---------------------------------------------------------------------------
 
@@ -80,6 +71,11 @@ def _load_cfg(cfg_path: str) -> dict:
 def _ckpt(subdir: str = "data/models"):
     from scripts.utils import StepCheckpoint
     return StepCheckpoint(subdir)
+
+
+def _name_to_short(name: str) -> str:
+    """Convert site name to short key: 'Gasa Crater' -> 'gasa'"""
+    return name.lower().split()[0]
 
 
 # ---------------------------------------------------------------------------
@@ -208,6 +204,10 @@ def run_preprocess(cfg: str, **kwargs) -> None:
 
     log.info(f"Found: {len(hirise_flat)} HiRISE obs, "
              f"{len(ctx_all)} CTX sites, {len(mola_all)} MOLA subsets")
+
+    # Build a name->key map: "gasa" matches "Gasa Crater" etc.
+    def _name_to_short(name: str) -> str:
+        return name.lower().split()[0]  # "Gasa Crater" -> "gasa"
 
     # Build per-site HiRISE mapping from config known_images
     hirise_by_site: Dict[str, Dict[str, Path]] = {}
@@ -383,7 +383,7 @@ def run_features(cfg: str, **kwargs) -> None:
 
     for site_key in _site_keys(config):
         site_name  = config["study_area"][site_key].get("name", site_key)
-        short_name = _name_to_short(site_name)  # Now accessible here!
+        short_name = _name_to_short(site_name)
 
         hirise_paths = _norm_files_for_site(site_key)
         composite    = _composite_for_site(site_key)
@@ -442,11 +442,12 @@ def run_labels(cfg: str, **kwargs) -> None:
 
     for site_key in _site_keys(config):
         site_cfg  = config["study_area"][site_key]
-        site_name = site_cfg.get("name", site_key)
-        mola_path = mola_all.get(site_key)
+        site_name  = site_cfg.get("name", site_key)
+        short_name = _name_to_short(site_name)
+        mola_path  = mola_all.get(short_name) or mola_all.get(site_key)
 
         if not mola_path:
-            log.warning(f"No MOLA subset for {site_name} — skipping labels")
+            log.warning(f"No MOLA subset for {site_name} (tried '{short_name}')")
             continue
 
         # Load slope/aspect from MOLA
@@ -478,6 +479,62 @@ def run_labels(cfg: str, **kwargs) -> None:
             )
         except Exception as e:
             log.warning(f"Label generation failed for {site_name}: {e}")
+
+    # Extract .npy patches from feature stacks + label masks for PyTorch dataset
+    log.info("Extracting training patches...")
+    try:
+        from scripts.labels.augment_labels import extract_patches, save_patches
+        feat_dir      = Path("data/processed/feature_stacks")
+        label_dir     = Path("data/processed/labels")
+        img_patch_dir = Path("data/processed/patches/images")
+        msk_patch_dir = Path("data/processed/patches/masks")
+        img_patch_dir.mkdir(parents=True, exist_ok=True)
+        msk_patch_dir.mkdir(parents=True, exist_ok=True)
+
+        patch_size   = config.get("training", {}).get("patch_size", 512)
+        patch_stride = config.get("training", {}).get("patch_stride", 256)
+
+        for feat_file in sorted(feat_dir.glob("*.npz")):
+            site_prefix = feat_file.stem.split("_")[0]
+            site_name_cap = {"primary": "Gasa", "secondary": "Palikir",
+                             "tertiary": "Russell"}.get(site_prefix, site_prefix)
+            mask_files = list(label_dir.glob(f"*{site_name_cap}*.tif"))
+            if not mask_files:
+                continue
+            try:
+                npz = np.load(feat_file)
+                # Key is "stack" (set in save_feature_stack)
+                key = "stack" if "stack" in npz else list(npz.keys())[0]
+                feat_data = npz[key]
+                import rasterio as _rio
+                import cv2 as _cv2
+                with _rio.open(mask_files[0]) as _r:
+                    mask_data = _r.read(1)
+                # Resize mask to match feature stack spatial dims
+                fh, fw = feat_data.shape[1], feat_data.shape[2]
+                if mask_data.shape != (fh, fw):
+                    mask_data = _cv2.resize(
+                        mask_data.astype(np.float32), (fw, fh),
+                        interpolation=_cv2.INTER_NEAREST
+                    ).astype(np.uint8)
+                img_patches, msk_patches = extract_patches(
+                    feat_data, mask_data,
+                    patch_size=patch_size, stride=patch_stride,
+                    min_fg=0.001  # low threshold - gullies are rare
+                )
+                if img_patches:
+                    n_saved = save_patches(img_patches, msk_patches,
+                                          img_patch_dir, msk_patch_dir,
+                                          prefix=feat_file.stem)
+                    log.info(f"  {feat_file.name}: {n_saved} patches saved")
+                else:
+                    log.debug(f"  {feat_file.name}: no fg patches found")
+            except Exception as _e:
+                log.warning(f"Patch extraction failed for {feat_file.name}: {_e}")
+
+        log.info(f"Total patches: {len(list(img_patch_dir.glob('*.npy')))}")
+    except Exception as e:
+        log.warning(f"Patch extraction step failed: {e}")
 
     log.info("Labels step complete.")
 
@@ -632,7 +689,7 @@ def main(argv=None) -> None:
             try:
                 STEPS[step_name](**kwargs)
             except Exception as exc:
-                # log.error(f"Step '{step_name}' failed: {exc}", exc_info=True)
+                log.error(f"Step '{step_name}' failed: {exc}", exc_info=True)
                 log.error("Fix the error and re-run with --step <step_name>")
                 sys.exit(1)
         log.info("Pipeline complete.")

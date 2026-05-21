@@ -299,22 +299,31 @@ def pad_to_multiple(
 # ─── Timing ───────────────────────────────────────────────────────────────────
 
 class Timer:
-    """Simple context manager timer."""
+    """Context manager and explicit start/stop timer."""
 
     def __init__(self, name: str = ""):
         self.name = name
         self._start = None
+        self.elapsed = 0.0
 
-    def __enter__(self):
+    def start(self):
         self._start = time.perf_counter()
         return self
 
+    def stop(self) -> float:
+        if self._start is not None:
+            self.elapsed = time.perf_counter() - self._start
+        return self.elapsed
+
+    def __enter__(self):
+        self.start()
+        return self
+
     def __exit__(self, *args):
-        elapsed = time.perf_counter() - self._start
+        self.stop()
         logger = get_logger("timer")
         label = f"[{self.name}] " if self.name else ""
-        logger.info(f"{label}Elapsed: {elapsed:.2f}s")
-        self.elapsed = elapsed
+        logger.debug(f"{label}Elapsed: {self.elapsed:.2f}s")
 
 
 # ─── Progress helpers ─────────────────────────────────────────────────────────

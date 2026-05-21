@@ -45,15 +45,25 @@ def normalize_feature(arr: np.ndarray) -> np.ndarray:
     return ((out - lo) / (hi - lo)).astype(np.float32)
 
 
+# Maximum working resolution for feature stack computation
+# Full 20k×16k images are too large for memory; cap at this size
+MAX_FEATURE_SIZE = 4096  # pixels on longest side
+
+
 def build_feature_stack(
     hirise_path: Optional[Path],
     ctx_path: Optional[Path],
     mola_path: Optional[Path],
     cfg: Dict,
-    target_shape: Optional[Tuple[int, int]] = None
+    target_shape: Optional[Tuple[int, int]] = None,
+    max_size: int = MAX_FEATURE_SIZE,
 ) -> Tuple[np.ndarray, List[str]]:
     """
     Build a (C, H, W) feature stack from available data sources.
+
+    Caps working resolution at max_size pixels on the longest side to
+    keep memory and compute time manageable. The U-Net processes 512x512
+    patches so working at 4096px gives ~64 patches per side — sufficient.
 
     Returns
     -------
@@ -71,6 +81,14 @@ def build_feature_stack(
             hirise_data = src.read().astype(np.float32)  # (C, H, W)
             if target_shape is None:
                 target_shape = (src.height, src.width)
+
+        # Cap resolution for tractable compute
+        if target_shape:
+            h, w = target_shape
+            scale = min(1.0, max_size / max(h, w))
+            if scale < 1.0:
+                target_shape = (max(64, int(h * scale)), max(64, int(w * scale)))
+                log.info(f"Capping feature stack to {target_shape} (scale={scale:.3f})")
 
         for i in range(hirise_data.shape[0]):
             band = resize_to_shape(hirise_data[i], *target_shape)
@@ -128,7 +146,7 @@ def build_feature_stack(
         log.warning("MOLA data not available for feature stack")
 
     if not features:
-        raise ValueError("No features could be computed — check input files")
+        raise ValueError("No features could be computed  -  check input files")
 
     stack = np.stack(features, axis=0)  # (C, H, W)
     log.info(f"Feature stack: {stack.shape} ({len(names)} channels)")

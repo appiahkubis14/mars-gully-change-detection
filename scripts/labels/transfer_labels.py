@@ -131,7 +131,7 @@ def morphological_reshape_to_gully(
 def generate_synthetic_gully_mask(
     slope_map: np.ndarray,
     aspect_map: np.ndarray,
-    slope_threshold: float = 15.0,
+    slope_threshold: float = 2.0,   # 2deg suits MOLA 463m/px resolution
     n_gullies: int = 20,
     gully_length_px: int = 50,
     gully_width_px: int = 3,
@@ -152,7 +152,7 @@ def generate_synthetic_gully_mask(
     # Find high-slope candidate pixels
     candidates = np.argwhere(slope_map > slope_threshold)
     if len(candidates) == 0:
-        log.warning("No high-slope pixels found — using random mask")
+        log.warning("No high-slope pixels found  -  using random mask")
         candidates = np.argwhere(np.ones((h, w), dtype=bool))
 
     for _ in range(n_gullies):
@@ -241,7 +241,7 @@ def transfer_labels(
                     shaped = scipy_zoom(shaped, (zoom_h, zoom_w), order=0).astype(np.uint8)
                 masks.append(shaped)
     else:
-        log.info("No Earth masks available — using synthetic label generation")
+        log.info("No Earth masks available  -  using synthetic label generation")
 
     # Fill remaining with synthetic masks
     n_synthetic = max(0, n_output_masks - len(masks))
@@ -301,7 +301,8 @@ def generate_labels_for_site(
     ck_key = f"labels_{site_name}"
     if not force and checkpoint.is_done("labels", ck_key):
         existing = list(output_dir.glob(f"{site_name}_label_*.tif"))
-        if existing:
+        # Skip only if files exist AND are valid (>1KB each)
+        if existing and all(p.stat().st_size > 1000 for p in existing):
             log.info(f"[SKIP] Labels exist for {site_name}")
             return existing
 
@@ -324,5 +325,5 @@ def generate_labels_for_site(
         saved_paths.append(out_path)
 
     checkpoint.mark_done("labels", ck_key, {"n_masks": len(saved_paths)})
-    log.info(f"✓ Saved {len(saved_paths)} label masks for {site_name}")
+    log.info(f"[OK] Saved {len(saved_paths)} label masks for {site_name}")
     return saved_paths
