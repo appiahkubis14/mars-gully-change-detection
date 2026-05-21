@@ -183,7 +183,7 @@ def get_albumentations_transform(cfg: Dict):
         import albumentations as A
         from albumentations.pytorch import ToTensorV2
     except ImportError:
-        log.warning("albumentations not installed — using simple augmentation")
+        log.warning("albumentations not installed  -  using simple augmentation")
         return None
 
     aug_cfg = cfg.get("training", {}).get("augmentation", {})
@@ -262,16 +262,16 @@ def build_dataloaders(
         batch_size=batch_size,
         sampler=sampler,
         shuffle=(sampler is None),
-        num_workers=4,
-        pin_memory=True,
+        num_workers=0,  # 0 = main process only (Windows fix)
+        pin_memory=False,  # no CUDA pin on CPU
         drop_last=True
     )
     val_loader = DataLoader(
         val_ds,
         batch_size=batch_size,
         shuffle=False,
-        num_workers=2,
-        pin_memory=True
+        num_workers=0,  # 0 = main process only (Windows fix)
+        pin_memory=False  # no CUDA pin on CPU
     )
 
     log.info(f"Train: {len(train_ds)} patches | Val: {len(val_ds)} patches")

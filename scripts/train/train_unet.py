@@ -103,7 +103,7 @@ def _train_one_epoch(
         images = images.to(device, non_blocking=True)
         masks = masks.to(device, non_blocking=True)
 
-        with torch.cuda.amp.autocast():
+        with torch.amp.autocast('cpu' if not torch.cuda.is_available() else 'cuda'):
             logits = model(images)
             loss = criterion(logits, masks) / grad_accum_steps
 
@@ -143,7 +143,7 @@ def _validate_one_epoch(
     for images, masks in loader:
         images = images.to(device, non_blocking=True)
         masks = masks.to(device, non_blocking=True)
-        with torch.cuda.amp.autocast():
+        with torch.amp.autocast('cpu' if not torch.cuda.is_available() else 'cuda'):
             logits = model(images)
             loss = criterion(logits, masks)
         total_loss += loss.item()
@@ -221,6 +221,15 @@ def train(cfg_path: str = "config.yaml", resume: Optional[str] = None) -> None:
 
     # ------------------------------------------------------------------ device
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    log.info(f"Training on {device}")
+    if device.type == "cpu":
+        # CPU training: reduce batch size and warn about speed
+        cfg.setdefault("training", {})
+        original_bs = cfg["training"].get("batch_size", 8)
+        if original_bs > 2:
+            cfg["training"]["batch_size"] = 2
+            log.info(f"CPU mode: batch_size reduced {original_bs}->2 for speed")
+        log.info("Tip: training on CPU is slow. Consider Google Colab for GPU.")
     log.info(f"Training on {device}")
 
     # ------------------------------------------------------------------ data
@@ -310,7 +319,7 @@ def train(cfg_path: str = "config.yaml", resume: Optional[str] = None) -> None:
         val_metrics = _validate_one_epoch(model, val_loader, criterion, device)
 
         scheduler.step(val_metrics["iou"])
-        elapsed = timer.elapsed()
+        elapsed = timer.elapsed
 
         # ---- logging ----
         lr_now = optimizer.param_groups[0]["lr"]
