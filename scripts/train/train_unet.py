@@ -245,6 +245,11 @@ def train(cfg_path: str = "config.yaml", resume: Optional[str] = None) -> None:
         )
         return
 
+    # Override batch size for CPU (multiprocessing deadlocks on Windows with workers>0)
+    if device.type == "cpu":
+        cfg.setdefault("training", {})["batch_size"] = 2
+        log.info("CPU: batch_size=2, num_workers=0")
+
     train_loader, val_loader = build_dataloaders(
         cfg,
         train_img_dir=img_dir,
