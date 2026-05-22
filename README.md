@@ -57,7 +57,7 @@ flowchart TD
 
 ## Dashboard Preview
 
-![Mars Gully Digital Twin Dashboard](results\map.png)
+![Mars Gully Digital Twin Dashboard](results\map1.png)
 
 *The interactive Folium dashboard enables exploration of gully detection results with multiple Mars basemap options, probability map overlays, and time-series change analysis.*
 
