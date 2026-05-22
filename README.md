@@ -67,7 +67,6 @@ flowchart TD
 | Gasa Crater | −35.7°N, 129.5°E | ~12 | 2006–2020 | Alcove-channel-apron |
 | Palikir Crater | −41.5°N, 202.3°E | ~18 | 2005–2019 | Pole-facing gullies |
 | Russell Crater | −54.3°N, 12.9°E | ~15 | 2007–2021 | CO₂-driven flows |
-
 ---
 
 ## Data Sources
@@ -78,7 +77,6 @@ flowchart TD
 | CTX | 6 m | [PDS/ODE REST API](https://ode.rsl.wustl.edu/) |
 | CRISM | 18–36 m | [WUSTL PDS](https://pds-geosciences.wustl.edu/) |
 | MOLA | 463 m (4ppd) | [USGS Planetary Maps](https://planetarymaps.usgs.gov/) |
-
 ---
 
 ## Installation
