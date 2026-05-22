@@ -1,0 +1,25 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7629083.7763120085,
+          -2078515.3079357191
+        ]
+      },
+      "properties": {
+        "gully_id": 1,
+        "first_seen": 50.0,
+        "last_seen": 21555.0,
+        "n_obs": 7,
+        "area_ha_latest": 48217.572582,
+        "area_ha_smoothed_latest": 48210.557407,
+        "expansion_ha_year": -0.0658,
+        "total_gain_ha": 13.4048
+      }
+    }
+  ]
+}

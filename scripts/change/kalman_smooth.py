@@ -277,18 +277,30 @@ def run_kalman_smoothing(cfg_path: str = "config.yaml") -> None:
     cumulative = 0.0
 
     for pair in pairs:
+        def _to_float(s):
+            try:
+                return float(s)
+            except (ValueError, TypeError):
+                # Extract numeric part from orbit/composite key
+                import re as _re
+                m = _re.search(r"(\d+)", str(s))
+                return float(m.group(1)) if m else 0.0
+
         if not dates:
-            dates.append(float(pair["date_t0"]))
+            dates.append(_to_float(pair["date_t0"]))
             areas.append(cumulative)
-        cumulative += pair["net_change_ha"]
-        dates.append(float(pair["date_t1"]))
+        net = pair.get("net_change_ha", 0.0)
+        if isinstance(net, float) and (abs(net) > 1e12 or net != net):
+            net = 0.0  # clip overflow/NaN
+        cumulative += net
+        dates.append(_to_float(pair["date_t1"]))
         areas.append(max(cumulative, 0.0))   # area can't be negative
 
     smoothed_result = smooth_area_series(dates, areas)
     out_path = change_dir / "kalman_smoothed.json"
     with open(out_path, "w") as f:
         json.dump(smoothed_result, f, indent=2)
-    log.info(f"Kalman-smoothed area series → {out_path}")
+    log.info(f"Kalman-smoothed area series -> {out_path}")
 
     # ---- per-pair expansion rate ----
     for i, pair in enumerate(pairs):

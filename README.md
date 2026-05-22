@@ -10,6 +10,12 @@
 
 ---
 
+<p align="center">
+  <img src="results\map.png" alt="Mars Gully Dashboard" width="800"/>
+  <br>
+  <em>Interactive Mars Gully Digital Twin Dashboard — Gasa, Palikir, and Russell Craters</em>
+</p>
+
 ## Abstract
 
 Mars gullies are among the most dynamically active geomorphological features on the Martian surface, with documented morphological changes occurring on sub-decadal timescales. Understanding their formation and evolution is critical for constraining present-day volatile transport, periglacial processes, and the potential for transient liquid water. This pipeline implements a complete planetary digital twin for multi-temporal gully detection and change monitoring across three high-activity crater sites: **Gasa** (−35.7°N, 129.5°E), **Palikir** (−41.5°N, 202.3°E), and **Russell** (−54.3°N, 12.9°E).
@@ -47,6 +53,13 @@ flowchart TD
 ```
 
 ---
+
+
+## Dashboard Preview
+
+![Mars Gully Digital Twin Dashboard](results\map.png)
+
+*The interactive Folium dashboard enables exploration of gully detection results with multiple Mars basemap options, probability map overlays, and time-series change analysis.*
 
 ## Study Areas
 

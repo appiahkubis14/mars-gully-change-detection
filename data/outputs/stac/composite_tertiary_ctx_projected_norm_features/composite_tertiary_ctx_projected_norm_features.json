@@ -1,0 +1,97 @@
+{
+  "type": "Feature",
+  "stac_version": "1.1.0",
+  "stac_extensions": [],
+  "id": "composite_tertiary_ctx_projected_norm_features",
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          20526827.752320945,
+          -3190853.046241547
+        ],
+        [
+          20551404.04152587,
+          -3190853.046241547
+        ],
+        [
+          20551404.04152587,
+          -3171196.3174968828
+        ],
+        [
+          20526827.752320945,
+          -3171196.3174968828
+        ],
+        [
+          20526827.752320945,
+          -3190853.046241547
+        ]
+      ]
+    ]
+  },
+  "bbox": [
+    20526827.752320945,
+    -3190853.046241547,
+    20551404.04152587,
+    -3171196.3174968828
+  ],
+  "properties": {
+    "title": "Mars Gully Detection – composite_tertiary_ctx_projected_norm_features",
+    "provider": "Copernicus Master's in Digital Earth",
+    "platform": "MRO",
+    "instruments": [
+      "HiRISE",
+      "CTX"
+    ],
+    "datetime": "2026-05-22T08:36:10.556716Z"
+  },
+  "links": [
+    {
+      "rel": "root",
+      "href": "../catalog.json",
+      "type": "application/json",
+      "title": "Mars Gully Digital Twin"
+    },
+    {
+      "rel": "parent",
+      "href": "../catalog.json",
+      "type": "application/json",
+      "title": "Mars Gully Digital Twin"
+    }
+  ],
+  "assets": {
+    "probability_map": {
+      "href": "C:/Users/HP/Documents/mars-gully-change-detection/data/outputs/probability_maps/composite_tertiary_ctx_projected_norm_features_prob.tif",
+      "type": "image/tiff; application=geotiff",
+      "title": "Gully Probability Map",
+      "roles": [
+        "data"
+      ]
+    },
+    "binary_0.3": {
+      "href": "C:/Users/HP/Documents/mars-gully-change-detection/data/outputs/binary_maps/composite_tertiary_ctx_projected_norm_features_thr30.tif",
+      "type": "image/tiff; application=geotiff",
+      "title": "Binary Mask (threshold=0.3)",
+      "roles": [
+        "data"
+      ]
+    },
+    "binary_0.5": {
+      "href": "C:/Users/HP/Documents/mars-gully-change-detection/data/outputs/binary_maps/composite_tertiary_ctx_projected_norm_features_thr50.tif",
+      "type": "image/tiff; application=geotiff",
+      "title": "Binary Mask (threshold=0.5)",
+      "roles": [
+        "data"
+      ]
+    },
+    "binary_0.7": {
+      "href": "C:/Users/HP/Documents/mars-gully-change-detection/data/outputs/binary_maps/composite_tertiary_ctx_projected_norm_features_thr70.tif",
+      "type": "image/tiff; application=geotiff",
+      "title": "Binary Mask (threshold=0.7)",
+      "roles": [
+        "data"
+      ]
+    }
+  }
+}

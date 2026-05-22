@@ -1,0 +1,8 @@
+site_id,n_gully_pixels,gully_area_ha,n_polygons,prob_mean,prob_max
+composite_primary_features,13389024,48202.8407,1,0.5381,0.637
+composite_secondary_features,15066744,54242.1651,1,0.5381,0.6341
+composite_tertiary_ctx_projected_norm_features,13389024,48202.8407,1,0.5381,0.637
+primary_ESP_012024_1440_projected_norm_features,13389024,48202.8407,1,0.5381,0.637
+primary_ESP_020661_1440_projected_norm_features,13389024,48202.8407,1,0.5381,0.637
+primary_ESP_027597_1440_projected_norm_features,13389024,48202.8407,1,0.5381,0.637
+secondary_ESP_021555_1380_projected_norm_features,15066744,54242.1651,1,0.5381,0.6341

@@ -43,9 +43,31 @@ log = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 
 def _sort_key(path: Path) -> str:
-    """Extract a sortable date string from filename, e.g. '2015'."""
-    match = re.search(r"(\d{4})", path.stem)
-    return match.group(1) if match else path.stem
+    """
+    Extract a sortable numeric key from a binary map filename.
+    Tries to find an ESP/PSP orbit number or 4-digit year.
+    Falls back to a hash for composite filenames.
+    """
+    stem = path.stem
+    # Try ESP_XXXXXX or PSP_XXXXXX orbit number
+    m = re.search(r"(?:ESP|PSP)_(\d{6})", stem)
+    if m:
+        return m.group(1)  # 6-digit orbit number, sortable
+    # Try any 6-digit sequence
+    m = re.search(r"(\d{6})", stem)
+    if m:
+        return m.group(1)
+    # Try 4-digit year
+    m = re.search(r"(20\d{2})", stem)
+    if m:
+        return m.group(1)
+    # Composite files: return a stable hash-based key
+    # composite_primary -> "000000", composite_secondary -> "000001" etc.
+    order = {"primary": "000000", "secondary": "000001", "tertiary": "000002"}
+    for k, v in order.items():
+        if k in stem:
+            return v
+    return "000000"
 
 
 def load_binary_map(path: Path) -> Tuple[np.ndarray, dict]:
@@ -144,9 +166,9 @@ def save_rgb_change(
         blockysize=256,
     )
     with rasterio.open(output_path, "w", **out_profile) as dst:
-        dst.write(gain[np.newaxis],   1)
-        dst.write(loss[np.newaxis],   2)
-        dst.write(stable[np.newaxis], 3)
+        dst.write(np.squeeze(gain).astype(np.uint8),   1)
+        dst.write(np.squeeze(loss).astype(np.uint8),   2)
+        dst.write(np.squeeze(stable).astype(np.uint8), 3)
 
 
 # ---------------------------------------------------------------------------
@@ -201,7 +223,7 @@ def run_change_detection(
             log.info(f"[SKIP] {pair_key}")
             continue
 
-        log.info(f"Processing: {path_t0.stem} → {path_t1.stem}")
+        log.info(f"Processing: {path_t0.stem} -> {path_t1.stem}")
 
         mask_t0, profile_t0 = load_binary_map(path_t0)
         mask_t1, profile_t1 = load_binary_map(path_t1)
@@ -233,7 +255,7 @@ def run_change_detection(
             "gain_ha": round(gain.sum() * pix_area / 10_000, 4),
             "loss_ha": round(loss.sum() * pix_area / 10_000, 4),
             "stable_ha": round(stable.sum() * pix_area / 10_000, 4),
-            "net_change_ha": round((gain.sum() - loss.sum()) * pix_area / 10_000, 4),
+            "net_change_ha": round(float(int(gain.sum()) - int(loss.sum())) * pix_area / 10_000, 4),
         }
         all_pairs.append(pair_result)
         log.info(
@@ -246,5 +268,5 @@ def run_change_detection(
     summary_path = out_dir / "change_summary.json"
     with open(summary_path, "w") as f:
         json.dump(all_pairs, f, indent=2)
-    log.info(f"Change summary → {summary_path}")
+    log.info(f"Change summary -> {summary_path}")
     return all_pairs

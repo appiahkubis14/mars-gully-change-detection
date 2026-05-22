@@ -1,0 +1,97 @@
+{
+  "type": "Feature",
+  "stac_version": "1.1.0",
+  "stac_extensions": [],
+  "id": "secondary_ESP_021555_1380_projected_norm_features",
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          9288345.101902084,
+          -2434596.6982036037
+        ],
+        [
+          9312921.39110701,
+          -2434596.6982036037
+        ],
+        [
+          9312921.39110701,
+          -2412480.1891985633
+        ],
+        [
+          9288345.101902084,
+          -2412480.1891985633
+        ],
+        [
+          9288345.101902084,
+          -2434596.6982036037
+        ]
+      ]
+    ]
+  },
+  "bbox": [
+    9288345.101902084,
+    -2434596.6982036037,
+    9312921.39110701,
+    -2412480.1891985633
+  ],
+  "properties": {
+    "title": "Mars Gully Detection – secondary_ESP_021555_1380_projected_norm_features",
+    "provider": "Copernicus Master's in Digital Earth",
+    "platform": "MRO",
+    "instruments": [
+      "HiRISE",
+      "CTX"
+    ],
+    "datetime": "0215-07-01T00:00:00Z"
+  },
+  "links": [
+    {
+      "rel": "root",
+      "href": "../catalog.json",
+      "type": "application/json",
+      "title": "Mars Gully Digital Twin"
+    },
+    {
+      "rel": "parent",
+      "href": "../catalog.json",
+      "type": "application/json",
+      "title": "Mars Gully Digital Twin"
+    }
+  ],
+  "assets": {
+    "probability_map": {
+      "href": "C:/Users/HP/Documents/mars-gully-change-detection/data/outputs/probability_maps/secondary_ESP_021555_1380_projected_norm_features_prob.tif",
+      "type": "image/tiff; application=geotiff",
+      "title": "Gully Probability Map",
+      "roles": [
+        "data"
+      ]
+    },
+    "binary_0.3": {
+      "href": "C:/Users/HP/Documents/mars-gully-change-detection/data/outputs/binary_maps/secondary_ESP_021555_1380_projected_norm_features_thr30.tif",
+      "type": "image/tiff; application=geotiff",
+      "title": "Binary Mask (threshold=0.3)",
+      "roles": [
+        "data"
+      ]
+    },
+    "binary_0.5": {
+      "href": "C:/Users/HP/Documents/mars-gully-change-detection/data/outputs/binary_maps/secondary_ESP_021555_1380_projected_norm_features_thr50.tif",
+      "type": "image/tiff; application=geotiff",
+      "title": "Binary Mask (threshold=0.5)",
+      "roles": [
+        "data"
+      ]
+    },
+    "binary_0.7": {
+      "href": "C:/Users/HP/Documents/mars-gully-change-detection/data/outputs/binary_maps/secondary_ESP_021555_1380_projected_norm_features_thr70.tif",
+      "type": "image/tiff; application=geotiff",
+      "title": "Binary Mask (threshold=0.7)",
+      "roles": [
+        "data"
+      ]
+    }
+  }
+}

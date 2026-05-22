@@ -309,7 +309,7 @@ def run_activity_tracking(cfg_path: str = "config.yaml") -> None:
     thr_str = "thr50"
     binary_files = sorted(binary_dir.glob(f"*_{thr_str}.tif"))
     if len(binary_files) < 2:
-        log.warning("Need ≥ 2 binary maps for tracking.")
+        log.warning("Need >= 2 binary maps for tracking.")
         return
 
     with rasterio.open(binary_files[0]) as src:
@@ -321,21 +321,32 @@ def run_activity_tracking(cfg_path: str = "config.yaml") -> None:
         iou_threshold=cfg.get("change_detection", {}).get("min_activity_confidence", 0.3),
     )
 
+    # Load all binary maps, aligning to the first map's shape
+    ref_shape = None
     for bf in binary_files:
-        match = re.search(r"(\d{4})", bf.stem)
+        match = re.search(r"(\d+)", bf.stem)
         date = float(match.group(1)) if match else 0.0
-        with rasterio.open(bf) as src:
-            binary = src.read(1).astype(np.uint8)
+        with rasterio.open(bf) as ds:
+            binary = ds.read(1).astype(np.uint8)
+        # Align shape to reference (first map)
+        if ref_shape is None:
+            ref_shape = binary.shape
+        elif binary.shape != ref_shape:
+            import cv2 as _cv2
+            binary = _cv2.resize(
+                binary, (ref_shape[1], ref_shape[0]),
+                interpolation=_cv2.INTER_NEAREST
+            ).astype(np.uint8)
         tracker.ingest(date, binary)
 
     tracks = tracker.get_tracks()
     tracks_path = out_dir / "activity_tracks.json"
     with open(tracks_path, "w") as f:
         json.dump(tracks, f, indent=2)
-    log.info(f"Activity tracks → {tracks_path}  ({len(tracks)} gully instances)")
+    log.info(f"Activity tracks -> {tracks_path}  ({len(tracks)} gully instances)")
 
     geojson = tracks_to_geojson(tracks, profile)
     geojson_path = out_dir / "active_sites.geojson"
     with open(geojson_path, "w") as f:
         json.dump(geojson, f, indent=2)
-    log.info(f"Active sites GeoJSON → {geojson_path}")
+    log.info(f"Active sites GeoJSON -> {geojson_path}")

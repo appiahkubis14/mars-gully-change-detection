@@ -1,0 +1,50 @@
+{
+  "type": "Catalog",
+  "id": "mars-gully-digital-twin",
+  "stac_version": "1.1.0",
+  "description": "Mars Gully Digital Twin – STAC Catalog of probability maps and binary gully masks produced by a multi-sensor deep learning pipeline.",
+  "links": [
+    {
+      "rel": "root",
+      "href": "./catalog.json",
+      "type": "application/json",
+      "title": "Mars Gully Digital Twin"
+    },
+    {
+      "rel": "item",
+      "href": "./composite_primary_features/composite_primary_features.json",
+      "type": "application/geo+json"
+    },
+    {
+      "rel": "item",
+      "href": "./composite_secondary_features/composite_secondary_features.json",
+      "type": "application/geo+json"
+    },
+    {
+      "rel": "item",
+      "href": "./composite_tertiary_ctx_projected_norm_features/composite_tertiary_ctx_projected_norm_features.json",
+      "type": "application/geo+json"
+    },
+    {
+      "rel": "item",
+      "href": "./primary_ESP_012024_1440_projected_norm_features/primary_ESP_012024_1440_projected_norm_features.json",
+      "type": "application/geo+json"
+    },
+    {
+      "rel": "item",
+      "href": "./primary_ESP_020661_1440_projected_norm_features/primary_ESP_020661_1440_projected_norm_features.json",
+      "type": "application/geo+json"
+    },
+    {
+      "rel": "item",
+      "href": "./primary_ESP_027597_1440_projected_norm_features/primary_ESP_027597_1440_projected_norm_features.json",
+      "type": "application/geo+json"
+    },
+    {
+      "rel": "item",
+      "href": "./secondary_ESP_021555_1380_projected_norm_features/secondary_ESP_021555_1380_projected_norm_features.json",
+      "type": "application/geo+json"
+    }
+  ],
+  "title": "Mars Gully Digital Twin"
+}
